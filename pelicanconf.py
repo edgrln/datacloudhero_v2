@@ -1,5 +1,5 @@
-AUTHOR = 'Ed'
-SITENAME = 'Main'
+AUTHOR = 'Edgar L'
+SITENAME = 'datacloudhero'
 SITEURL = ""
 
 PATH = "content"
@@ -7,8 +7,8 @@ PATH = "content"
 THEME = "themes/mytheme"
 AUTHORS_INFO = {
     'Ed': {
-        'avatar': 'https://avatars.githubusercontent.com/u/12345',
-        'title': 'Founder',
+        'avatar': 'https://avatars.githubusercontent.com/u/78014277?v=4',
+        'title': 'Technical Content Writer — AI & Data',
         'linkedin': 'https://linkedin.com/in/yourprofile',
         'github': 'https://github.com/yourprofile',
     },
