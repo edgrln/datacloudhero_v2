@@ -32,7 +32,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install pelican markdown; fi
 
       - name: Build site
-        run: pelican content -o output -s pelicanconf.py
+        run: pelican content -o output -s publishconf.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
