@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — {{ SITENAME }}{% endblock %}
+
+{% block content %}
+<div class="content">
+    {{ page.content }}
+</div>
+{% include "partials/cta.html" %}
+{% endblock %}

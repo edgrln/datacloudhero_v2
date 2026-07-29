@@ -1,0 +1,24 @@
+{# Expects a variable `author_name` in scope (a Pelican Author object or plain string) #}
+{% set info = AUTHORS_INFO.get(author_name|string, {}) %}
+<div class="d-flex align-items-center author-card mb-2">
+    {% if info.avatar %}
+    <img src="{{ info.avatar }}" alt="{{ author_name }}" class="author-avatar me-3">
+    {% endif %}
+    <div>
+        <div class="fw-semibold">
+            {% if author_name.url is defined %}
+            <a href="{{ SITEURL }}/{{ author_name.url }}" class="author-name">{{ author_name }}</a>
+            {% else %}
+            <span class="author-name">{{ author_name }}</span>
+            {% endif %}
+        </div>
+        {% if info.title %}<div class="text-muted small">{{ info.title }}</div>{% endif %}
+        {% if info.linkedin or info.github %}
+        <div class="small">
+            {% if info.linkedin %}<a href="{{ info.linkedin }}" class="author-social">LinkedIn</a>{% endif %}
+            {% if info.linkedin and info.github %} · {% endif %}
+            {% if info.github %}<a href="{{ info.github }}" class="author-social">GitHub</a>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>

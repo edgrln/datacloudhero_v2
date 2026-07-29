@@ -1,0 +1,11 @@
+{% if CTA_TITLE %}
+<div class="cta-box my-5 p-4 p-md-5 text-center">
+    <p class="text-uppercase small fw-semibold text-muted mb-2">Ready to start?</p>
+    <h2 class="mb-3">{{ CTA_TITLE }}</h2>
+    {% if CTA_TEXT %}<p class="text-muted mb-4 mx-auto cta-text">{{ CTA_TEXT }}</p>{% endif %}
+    {% if CTA_BUTTON_TEXT and CTA_BUTTON_LINK %}
+    <a href="{{ CTA_BUTTON_LINK }}" class="btn btn-dark btn-lg px-4">{{ CTA_BUTTON_TEXT }}</a>
+    {% endif %}
+    {% if CTA_FOOTNOTE %}<p class="text-muted small mt-3 mb-0">{{ CTA_FOOTNOTE }}</p>{% endif %}
+</div>
+{% endif %}
