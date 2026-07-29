@@ -3,8 +3,8 @@
 {% block title %}{{ page.title }} — {{ SITENAME }}{% endblock %}
 
 {% block content %}
-<div class="content">
+<div class="content-wrap mx-auto">
     {{ page.content }}
+    {% include "partials/cta.html" %}
 </div>
-{% include "partials/cta.html" %}
 {% endblock %}

@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "blog_base.html" %}
 
 {% block title %}{{ category }} — {{ SITENAME }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
 <h1 class="mb-4">Category: {{ category }}</h1>
 {% for article in articles %}
 <article class="mb-4 pb-3 border-bottom">

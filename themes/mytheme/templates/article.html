@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends "blog_base.html" %}
 
 {% block title %}{{ article.title }} — {{ SITENAME }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
 <article class="article-single">
     <h1 class="mb-2">{{ article.title }}</h1>
     <p class="text-muted mb-4">{{ article.locale_date }} · {{ (article.content|striptags|wordcount // 200) + 1 }} min read</p>
 
-    <div class="mb-4">
+    <div class="d-flex flex-wrap gap-4 mb-4">
         {% if article.authors %}
             {% for a in article.authors %}
                 {% set author_name = a %}

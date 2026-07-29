@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "blog_base.html" %}
 
 {% block title %}{{ author }} — {{ SITENAME }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
 {% set author_name = author %}
 {% include "partials/author_card.html" with context %}
 

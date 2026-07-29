@@ -1,21 +1,7 @@
-{% extends "base.html" %}
+{% extends "blog_base.html" %}
 
-{% block content %}
-<h1 class="mb-4">All posts</h1>
-
-{% set articles_by_year = articles_page.object_list|groupby('date.year')|reverse %}
-{% for year, year_articles in articles_by_year %}
-<h3 class="text-muted mt-4 mb-3">{{ year }}</h3>
-<ul class="list-unstyled mb-4">
-    {% for article in year_articles|sort(attribute='date', reverse=True) %}
-    <li class="mb-2">
-        <a href="{{ SITEURL }}/{{ article.url }}" class="index-link">{{ article.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
-{% endfor %}
-
-<hr class="my-5">
+{% block blog_content %}
+<h1 class="mb-4">Latest posts</h1>
 
 {% for article in articles_page.object_list %}
 <article class="mb-5 pb-4 border-bottom">
@@ -23,10 +9,12 @@
     <p class="text-muted small">{{ article.locale_date }}</p>
 
     {% if article.authors %}
+        <div class="d-flex flex-wrap gap-4 mb-3">
         {% for a in article.authors %}
             {% set author_name = a %}
             {% include "partials/author_card.html" with context %}
         {% endfor %}
+        </div>
     {% elif article.author %}
         {% set author_name = article.author %}
         {% include "partials/author_card.html" with context %}
