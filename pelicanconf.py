@@ -53,9 +53,20 @@ SOCIAL = [
 
 DEFAULT_PAGINATION = 10
 
-# Pretty URLs for articles (no .html suffix)
+# Clean stale files (e.g. old *.html paths) before each build
+DELETE_OUTPUT_DIRECTORY = True
+
+# Pretty URLs (no .html suffix)
 ARTICLE_URL = '{slug}/'
 ARTICLE_SAVE_AS = '{slug}/index.html'
+PAGE_URL = '{slug}/'
+PAGE_SAVE_AS = '{slug}/index.html'
+AUTHOR_URL = 'author/{slug}/'
+AUTHOR_SAVE_AS = 'author/{slug}/index.html'
+CATEGORY_URL = 'category/{slug}/'
+CATEGORY_SAVE_AS = 'category/{slug}/index.html'
+TAG_URL = 'tag/{slug}/'
+TAG_SAVE_AS = 'tag/{slug}/index.html'
 
 # Client-side search index (see themes/mytheme/templates/search.html)
 DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "search"]
