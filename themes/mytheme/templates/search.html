@@ -1,0 +1,5 @@
+[
+{% for article in articles|sort(attribute='date', reverse=True) -%}
+{"title": {{ article.title|striptags|tojson|safe }}, "url": {{ (SITEURL ~ '/' ~ article.url)|tojson|safe }}, "date": {{ article.locale_date|tojson|safe }}, "summary": {{ article.summary|striptags|truncate(160)|tojson|safe }}, "content": {{ article.content|striptags|tojson|safe }}}{% if not loop.last %},{% endif %}
+{% endfor -%}
+]

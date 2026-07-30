@@ -1,0 +1,14 @@
+{% extends "blog_base.html" %}
+
+{% block title %}Authors — {{ SITENAME }}{% endblock %}
+
+{% block blog_content %}
+<h1 class="mb-4">Authors</h1>
+<div class="authors-list">
+    {% for author, articles in authors|sort %}
+    {% set author_name = author %}
+    {% set count = articles|count %}
+    {% include "partials/author_card.html" with context %}
+    {% endfor %}
+</div>
+{% endblock %}

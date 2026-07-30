@@ -110,13 +110,235 @@ h1, h2, h3 {
     text-decoration: underline;
 }
 
-.author-social {
+.author-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #1c1e21;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.author-social-links {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.author-social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid #dfe2e6;
     color: #6c757d;
     text-decoration: none;
 }
 
-.author-social:hover {
-    text-decoration: underline;
+.author-social-icon:hover {
+    color: #1c1e21;
+    border-color: #1c1e21;
+}
+
+/* ---------- Authors list page ---------- */
+.authors-list .author-card {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eaecef;
+}
+
+.authors-list .author-avatar {
+    width: 56px;
+    height: 56px;
+}
+
+.authors-list .author-name {
+    font-size: 1.1rem;
+}
+
+/* ---------- Search ---------- */
+[x-cloak] {
+    display: none !important;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.65rem;
+    color: #6c757d;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 220px;
+    padding: 0.45rem 2.1rem 0.45rem 2.1rem;
+    border: 1px solid #dfe2e6;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    transition: border-color 0.15s ease, background 0.15s ease, width 0.15s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1bab53;
+    background: #fff;
+    width: 260px;
+}
+
+.search-clear {
+    position: absolute;
+    right: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    border-radius: 50%;
+}
+
+.search-clear:hover {
+    color: #1c1e21;
+    background: #eaecef;
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 380px;
+    max-width: 90vw;
+    background: #fff;
+    border: 1px solid #eaecef;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    padding: 0.5rem;
+}
+
+.search-result-list {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: 9px;
+    text-decoration: none;
+    margin-bottom: 0.15rem;
+}
+
+.search-result-item:last-child {
+    margin-bottom: 0;
+}
+
+.search-result-icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: #f1f3f5;
+    color: #495057;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.search-result-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-result-title {
+    font-weight: 500;
+    color: #1c1e21;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-title strong {
+    font-weight: 700;
+}
+
+.search-result-summary {
+    color: #6c757d;
+    font-size: 0.78rem;
+    margin-top: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-enter {
+    flex: 0 0 auto;
+    color: #adb5bd;
+    opacity: 0;
+}
+
+.search-result-item.is-selected {
+    background: #1bab53;
+}
+
+.search-result-item.is-selected .search-result-icon {
+    background: #fff;
+    color: #1bab53;
+}
+
+.search-result-item.is-selected .search-result-title,
+.search-result-item.is-selected .search-result-summary {
+    color: #fff;
+}
+
+.search-result-item.is-selected .search-result-enter {
+    color: #fff;
+    opacity: 1;
+}
+
+.search-see-all {
+    display: block;
+    text-align: center;
+    margin-top: 0.4rem;
+    padding: 0.55rem 0.6rem 0.35rem;
+    border-top: 1px solid #f1f3f5;
+    color: #495057;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.search-see-all:hover {
+    color: #1bab53;
+}
+
+.search-no-results {
+    padding: 0.75rem 0.9rem;
+    color: #6c757d;
+    font-size: 0.85rem;
 }
 
 /* ---------- Tag pills ---------- */

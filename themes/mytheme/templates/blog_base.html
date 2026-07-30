@@ -9,10 +9,10 @@
             {% for year, year_articles in articles_by_year %}
             <div class="sidebar-year">{{ year }}</div>
             <ul class="list-unstyled sidebar-list mb-3">
-                {% for article in year_articles|sort(attribute='date', reverse=True) %}
+                {% for post in year_articles|sort(attribute='date', reverse=True) %}
                 <li>
-                    <a href="{{ SITEURL }}/{{ article.url }}" class="sidebar-link {% if article == article_current %}active{% endif %}">
-                        {{ article.title }}
+                    <a href="{{ SITEURL }}/{{ post.url }}" class="sidebar-link {% if article is defined and post == article %}active{% endif %}">
+                        {{ post.title }}
                     </a>
                 </li>
                 {% endfor %}

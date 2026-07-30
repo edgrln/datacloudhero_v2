@@ -6,11 +6,17 @@ PATH = "content"
 
 THEME = "themes/mytheme"
 AUTHORS_INFO = {
-    'Ed': {
+    'Edgar L': {
         'avatar': 'https://avatars.githubusercontent.com/u/78014277?v=4',
         'title': 'Technical Content Writer — AI & Data',
-        'linkedin': 'https://linkedin.com/in/yourprofile',
-        'github': 'https://github.com/yourprofile',
+        'linkedin': 'https://www.linkedin.com/in/edgarlakshin/',
+        'github': 'https://github.com/edgrln',
+    },
+    'Alina Lane': {
+        'avatar': 'https://avatars.githubusercontent.com/u/253337931?v=4',
+        'title': 'Founder datacloud.com',
+        'linkedin': 'https://www.linkedin.com/in/edgarlakshin/',
+        'github': 'https://github.com/edgrln',
     },
 }
 
@@ -46,6 +52,18 @@ SOCIAL = [
 ]
 
 DEFAULT_PAGINATION = 10
+
+# Pretty URLs for articles (no .html suffix)
+ARTICLE_URL = '{slug}/'
+ARTICLE_SAVE_AS = '{slug}/index.html'
+
+# Client-side search index (see themes/mytheme/templates/search.html)
+DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "search"]
+SEARCH_SAVE_AS = "search-index.json"
+SEARCH_URL = "search-index.json"
+
+import json as _json
+JINJA_FILTERS = {"tojson": _json.dumps}
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
