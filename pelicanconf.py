@@ -51,7 +51,7 @@ SOCIAL = [
     ("Another social link", "#"),
 ]
 
-DEFAULT_PAGINATION = 10
+DEFAULT_PAGINATION = 1
 
 # Clean stale files (e.g. old *.html paths) before each build
 DELETE_OUTPUT_DIRECTORY = True

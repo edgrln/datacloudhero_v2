@@ -64,6 +64,38 @@
                 },
             };
         }
+
+        function infiniteScroll(nextUrl) {
+            return {
+                nextUrl: nextUrl || null,
+                loading: false,
+                init() {
+                    if (!this.nextUrl) return;
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) this.loadMore();
+                    });
+                    observer.observe(this.$refs.sentinel);
+                },
+                async loadMore() {
+                    if (this.loading || !this.nextUrl) return;
+                    this.loading = true;
+                    try {
+                        const res = await fetch(this.nextUrl);
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const newPosts = doc.querySelectorAll('#post-list > article');
+                        const list = this.$refs.postList;
+                        newPosts.forEach((post) => list.appendChild(post));
+                        const pagination = doc.getElementById('pagination-data');
+                        this.nextUrl = pagination ? (pagination.dataset.nextUrl || null) : null;
+                    } catch (e) {
+                        this.nextUrl = null;
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            };
+        }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="/theme/css/style.css" rel="stylesheet">
@@ -152,6 +184,7 @@
         </div>
     </div>
     <div class="col-lg-9">
+        <div class="content-wrap">
 <article class="article-single">
     <h1 class="mb-2">My First Review</h1>
     <p class="text-muted mb-4">Fri 03 December 2010 · 1 min read</p>
@@ -178,7 +211,8 @@
         <p>Following is a review of my favorite mechanical keyboard.</p>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 d-flex flex-wrap align-items-center gap-1">
+        <strong class="me-2">Tags:</strong>
         <a href="/tag/python/" class="tag-pill">python</a>
         <a href="/tag/pelican/" class="tag-pill">pelican</a>
     </div>
@@ -193,6 +227,7 @@
 <div class="mt-4">
     <a href="/" class="btn btn-outline-secondary btn-sm">&larr; Back to all posts</a>
 </div>
+        </div>
     </div>
 </div>
     </main>

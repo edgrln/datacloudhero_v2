@@ -64,6 +64,38 @@
                 },
             };
         }
+
+        function infiniteScroll(nextUrl) {
+            return {
+                nextUrl: nextUrl || null,
+                loading: false,
+                init() {
+                    if (!this.nextUrl) return;
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) this.loadMore();
+                    });
+                    observer.observe(this.$refs.sentinel);
+                },
+                async loadMore() {
+                    if (this.loading || !this.nextUrl) return;
+                    this.loading = true;
+                    try {
+                        const res = await fetch(this.nextUrl);
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const newPosts = doc.querySelectorAll('#post-list > article');
+                        const list = this.$refs.postList;
+                        newPosts.forEach((post) => list.appendChild(post));
+                        const pagination = doc.getElementById('pagination-data');
+                        this.nextUrl = pagination ? (pagination.dataset.nextUrl || null) : null;
+                    } catch (e) {
+                        this.nextUrl = null;
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            };
+        }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="/theme/css/style.css" rel="stylesheet">
@@ -147,6 +179,7 @@
         </div>
     </div>
     <div class="col-lg-9">
+        <div class="content-wrap">
 <h1 class="mb-4">Tag: markdown</h1>
 <article class="mb-5 pb-4 border-bottom">
     <h2><a class="text-decoration-none article-title-link" href="/first-blog-post/">First Blog Post</a></h2>
@@ -170,12 +203,10 @@
     </div>
 </div>        </div>
 
-    <p class="mt-3"><p>Lorem ipsum dolor sit amet...</p>
-<!-- truncate -->
+    <p class="mt-3"><p>Краткое превью статьи, которое увидят на главной и в списках.</p></p>
 
-<p>...consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet</p></p>
-
-    <div class="mb-3">
+    <div class="mb-3 d-flex flex-wrap align-items-center gap-1">
+        <strong class="me-2">Tags:</strong>
         <a href="/tag/pelican/" class="tag-pill">pelican</a>
         <a href="/tag/static-site/" class="tag-pill">static-site</a>
         <a href="/tag/markdown/" class="tag-pill">markdown</a>
@@ -183,6 +214,7 @@
 
     <a href="/first-blog-post/" class="btn btn-outline-primary btn-sm">Read more</a>
 </article>
+        </div>
     </div>
 </div>
     </main>

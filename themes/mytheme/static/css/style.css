@@ -25,15 +25,15 @@ body {
 }
 
 .sidebar-heading {
-    font-weight: 600;
-    font-size: 1.05rem;
+    font-weight: 700;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .sidebar-year {
-    font-weight: 600;
+    font-weight: 700;
     color: #6c757d;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     text-transform: none;
     margin-bottom: 0.5rem;
 }
@@ -45,7 +45,7 @@ body {
 .sidebar-link {
     color: #495057;
     text-decoration: none;
-    font-size: 0.92rem;
+    font-size: 1rem;
 }
 
 .sidebar-link:hover {
@@ -62,7 +62,7 @@ h1, h2, h3 {
 }
 
 .article-body {
-    font-size: 1.05rem;
+    font-size: 1.125rem;
     line-height: 1.75;
 }
 
@@ -74,6 +74,9 @@ h1, h2, h3 {
 
 /* ---------- Navbar ---------- */
 .site-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
     border-bottom: 1px solid #eaecef;
     background: #fff;
     padding-top: 1rem;
@@ -105,14 +108,14 @@ h1, h2, h3 {
 }
 
 .author-avatar {
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .author-name {
-    color: #1c1e21;
+    color: var(--accent);
     text-decoration: none;
 }
 
@@ -164,8 +167,8 @@ h1, h2, h3 {
 }
 
 .authors-list .author-avatar {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
 }
 
 .authors-list .author-name {
@@ -357,15 +360,16 @@ h1, h2, h3 {
     padding: 0.25rem 0.75rem;
     margin: 0 0.4rem 0.4rem 0;
     border-radius: 999px;
-    background: #f1f3f5;
+    background: transparent;
+    border: 1px solid #dee2e6;
     color: #495057;
     font-size: 0.85rem;
     text-decoration: none;
 }
 
 .tag-pill:hover {
-    background: #e2e6ea;
-    color: #212529;
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* ---------- CTA box ---------- */

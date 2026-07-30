@@ -3,47 +3,60 @@
 {% block blog_content %}
 <h1 class="mb-4">Latest posts</h1>
 
-{% for article in articles_page.object_list %}
-<article class="mb-5 pb-4 border-bottom">
-    <h2><a class="text-decoration-none article-title-link" href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
-    <p class="text-muted small">{{ article.locale_date }}</p>
+{% set next_url = (SITEURL ~ '/' ~ articles_next_page.url) if articles_page.has_next() else '' %}
+<div x-data="infiniteScroll('{{ next_url }}')" x-init="init()">
+    <div id="post-list" x-ref="postList">
+        {% for article in articles_page.object_list %}
+        <article class="mb-5 pb-4 border-bottom">
+            <h2><a class="text-decoration-none article-title-link" href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
+            <p class="text-muted small">{{ article.locale_date }}</p>
 
-    {% if article.authors %}
-        <div class="d-flex flex-wrap gap-4 mb-3">
-        {% for a in article.authors %}
-            {% set author_name = a %}
-            {% include "partials/author_card.html" with context %}
-        {% endfor %}
-        </div>
-    {% elif article.author %}
-        {% set author_name = article.author %}
-        {% include "partials/author_card.html" with context %}
-    {% endif %}
+            {% if article.authors %}
+                <div class="d-flex flex-wrap gap-4 mb-3">
+                {% for a in article.authors %}
+                    {% set author_name = a %}
+                    {% include "partials/author_card.html" with context %}
+                {% endfor %}
+                </div>
+            {% elif article.author %}
+                {% set author_name = article.author %}
+                {% include "partials/author_card.html" with context %}
+            {% endif %}
 
-    <p class="mt-3">{{ article.summary }}</p>
+            <p class="mt-3">{{ article.summary }}</p>
 
-    {% if article.tags %}
-    <div class="mb-3">
-        {% for tag in article.tags %}
-        <a href="{{ SITEURL }}/{{ tag.url }}" class="tag-pill">{{ tag }}</a>
+            {% if article.tags %}
+            <div class="mb-3 d-flex flex-wrap align-items-center gap-1">
+                <strong class="me-2">Tags:</strong>
+                {% for tag in article.tags %}
+                <a href="{{ SITEURL }}/{{ tag.url }}" class="tag-pill">{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline-primary btn-sm">Read more</a>
+        </article>
         {% endfor %}
     </div>
-    {% endif %}
 
-    <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline-primary btn-sm">Read more</a>
-</article>
-{% endfor %}
+    <div id="pagination-data" data-next-url="{{ next_url }}" class="d-none"></div>
 
-{% if articles_page.has_other_pages() %}
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        {% if articles_page.has_previous() %}
-        <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_previous_page.url }}">Previous</a></li>
+    <div x-show="loading" x-cloak class="text-center text-muted py-4">Loading more posts…</div>
+    <div x-ref="sentinel"></div>
+
+    <noscript>
+        {% if articles_page.has_other_pages() %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if articles_page.has_previous() %}
+                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_previous_page.url }}">Previous</a></li>
+                {% endif %}
+                {% if articles_page.has_next() %}
+                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_next_page.url }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
         {% endif %}
-        {% if articles_page.has_next() %}
-        <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_next_page.url }}">Next</a></li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+    </noscript>
+</div>
 {% endblock %}

@@ -64,6 +64,38 @@
                 },
             };
         }
+
+        function infiniteScroll(nextUrl) {
+            return {
+                nextUrl: nextUrl || null,
+                loading: false,
+                init() {
+                    if (!this.nextUrl) return;
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) this.loadMore();
+                    });
+                    observer.observe(this.$refs.sentinel);
+                },
+                async loadMore() {
+                    if (this.loading || !this.nextUrl) return;
+                    this.loading = true;
+                    try {
+                        const res = await fetch(this.nextUrl);
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const newPosts = doc.querySelectorAll('#post-list > article');
+                        const list = this.$refs.postList;
+                        newPosts.forEach((post) => list.appendChild(post));
+                        const pagination = doc.getElementById('pagination-data');
+                        this.nextUrl = pagination ? (pagination.dataset.nextUrl || null) : null;
+                    } catch (e) {
+                        this.nextUrl = null;
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            };
+        }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="/theme/css/style.css" rel="stylesheet">
