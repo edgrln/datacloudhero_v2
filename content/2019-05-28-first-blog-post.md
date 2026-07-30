@@ -1,5 +1,5 @@
 Title: First Blog Post
-Date: 2010-12-03 10:20
+Date: 2026-12-03 10:20
 Category: Food
 Author: Edgar L
 Tags: pelican, static-site, markdown

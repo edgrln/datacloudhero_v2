@@ -5,127 +5,113 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml"
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/archives.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/archives.html</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/alina-lane/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/author/alina-lane/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/edgar-l/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/author/edgar-l/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/authors.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/authors.html</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/categories.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/categories.html</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/food/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/category/food/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/review/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/category/review/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/first-blog-post/</loc>
+<loc>/blog/first-blog-post/</loc>
+<lastmod>2026-12-03T10:20:00+01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>/blog/my-first-review/</loc>
 <lastmod>2010-12-03T10:20:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/index2.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/search-index.json</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/my-first-review/</loc>
-<lastmod>2010-12-03T10:20:00+01:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>/search-index.json</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/tag/markdown/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/markdown/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/tag/pelican/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/pelican/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/tag/python/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/pelican/index2.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/tag/static-site/</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/python/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>/tag/static-site/</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>/tags.html</loc>
-<lastmod>2026-07-30T18:40:51-00:00</lastmod>
+<loc>/blog/tags.html</loc>
+<lastmod>2026-07-30T19:23:42-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
