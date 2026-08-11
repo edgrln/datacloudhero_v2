@@ -438,7 +438,8 @@
   x-data="{
     menuOpen: false,
     showContactForm: false,
-    formData: { name: '', email: '', message: '' },
+    formData: { name: '', email: '', message: '', company: '' },
+    formStartedAt: 0,
     submitting: false,
     status: '',
     error: '',
@@ -449,9 +450,12 @@
       this.submitting = true;
 
       try {
-        const body = new URLSearchParams(this.formData).toString();
+        const body = new URLSearchParams({
+          ...this.formData,
+          startedAt: String(this.formStartedAt),
+        }).toString();
 
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -459,12 +463,17 @@
           body,
         });
 
-        this.formData = { name: '', email: '', message: '' };
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Request failed');
+        }
+
+        this.formData = { name: '', email: '', message: '', company: '' };
         this.status = 'Message sent. Thank you!';
       } catch (err) {
         console.error(err);
-        this.formData = { name: '', email: '', message: '' };
-        this.status = 'Message sent. Thank you!';
+        this.error = 'Something went wrong. Please email us directly instead.';
       } finally {
         this.submitting = false;
       }
@@ -889,7 +898,7 @@
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <button type="button" @click="showContactForm = true" class="btn btn-glow btn-lg rounded-xl px-10 font-bold">
+            <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-glow btn-lg rounded-xl px-10 font-bold">
               Email Us ✉
             </button>
           </div>
@@ -925,6 +934,17 @@
         </div>
 
         <form @submit.prevent="submitContact" class="space-y-5">
+          <!-- Honeypot: hidden from real users, bots that auto-fill every input tend to fill it -->
+          <input
+            type="text"
+            name="company"
+            x-model="formData.company"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;"
+          />
+
           <div class="grid gap-4">
             <label class="block text-sm font-semibold text-slate-200">
               Name
