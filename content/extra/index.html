@@ -451,7 +451,7 @@
       this.submitting = true;
 
       try {
-        const turnstileToken = evt.target.querySelector('[name="cf-turnstile-response"]')?.value || '';
+        const turnstileToken = evt.target.querySelector('[name=cf-turnstile-response]')?.value || '';
 
         const body = new URLSearchParams({
           ...this.formData,
