@@ -431,6 +431,7 @@
   </script>
 
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body
@@ -443,16 +444,19 @@
     submitting: false,
     status: '',
     error: '',
-    async submitContact() {
+    async submitContact(evt) {
       const SCRIPT_URL = '/api/contact';
       this.error = '';
       this.status = '';
       this.submitting = true;
 
       try {
+        const turnstileToken = evt.target.querySelector('[name="cf-turnstile-response"]')?.value || '';
+
         const body = new URLSearchParams({
           ...this.formData,
           startedAt: String(this.formStartedAt),
+          turnstileToken,
         }).toString();
 
         const res = await fetch(SCRIPT_URL, {
@@ -476,6 +480,7 @@
         this.error = 'Something went wrong. Please email us directly instead.';
       } finally {
         this.submitting = false;
+        if (window.turnstile) window.turnstile.reset();
       }
     }
   }"
@@ -933,7 +938,7 @@
           </button>
         </div>
 
-        <form @submit.prevent="submitContact" class="space-y-5">
+        <form @submit.prevent="submitContact($event)" class="space-y-5">
           <!-- Honeypot: hidden from real users, bots that auto-fill every input tend to fill it -->
           <input
             type="text"
@@ -979,6 +984,8 @@
               ></textarea>
             </label>
           </div>
+
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAEM7muzBPUFiEYFd" data-theme="dark"></div>
 
           <div class="flex flex-col gap-3">
             <button type="submit" :disabled="submitting" class="btn btn-glow btn-lg rounded-2xl px-6 font-bold disabled:opacity-60">
