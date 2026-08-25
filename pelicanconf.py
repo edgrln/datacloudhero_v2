@@ -86,9 +86,16 @@ SEARCH_URL = "blog/search-index.json"
 
 # Landing page: a self-contained static HTML file copied verbatim to the
 # site root (it is not run through the blog theme/templates at all).
-STATIC_PATHS = ['extra/index.html']
+#
+# favicon.ico is also duplicated to the site root here (same file as
+# themes/mytheme/static/img/favicon.ico). Browsers fall back to fetching
+# /favicon.ico at the domain root for tabs that have no <link rel="icon">
+# to read from - e.g. the raw-text blog/{slug}.md mirrors - so a root-level
+# copy is what lets those tabs pick up a favicon at all.
+STATIC_PATHS = ['extra/index.html', 'extra/favicon.ico']
 EXTRA_PATH_METADATA = {
     'extra/index.html': {'path': 'index.html'},
+    'extra/favicon.ico': {'path': 'favicon.ico'},
 }
 # Keep the article/page generators from also trying to parse it as content
 ARTICLE_EXCLUDES = ['extra']
