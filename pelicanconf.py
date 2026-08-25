@@ -1,6 +1,9 @@
 AUTHOR = 'Edgar L'
 SITENAME = 'datacloudhero.com'
 SITEURL = ""
+# One-line description used in llms.txt (see bottom of this file) and other
+# machine-readable summaries of the site.
+SITE_DESCRIPTION = "Practical guides and tutorials on data & AI engineering."
 
 PATH = "content"
 
@@ -149,8 +152,47 @@ def _write_markdown_mirrors(article_generator):
             f.write(header + body)
 
 
+def _collapse_ws(text):
+    return _re.sub(r'\s+', ' ', text or '').strip()
+
+
+def _plain_summary(article):
+    """A one-line, tag-free description for an article: prefer the
+    `Summary:` metadata, falling back to Pelican's auto-generated summary.
+    Pelican's Markdown reader runs both through the Markdown->HTML
+    converter, so either way we strip tags before using it."""
+    raw = article.metadata.get('summary') or article.summary or ''
+    return _collapse_ws(_re.sub(r'<[^>]+>', '', raw))
+
+
+def _write_llms_txt(article_generator):
+    """Write an /llms.txt index (per the llmstxt.org convention) listing
+    every article and its Markdown mirror, so LLM tools can discover and
+    fetch the site's content without scraping HTML."""
+    settings = article_generator.settings
+    site_url = settings.get('SITEURL', '') or ''
+    site_name = settings.get('SITENAME', '')
+    description = settings.get('SITE_DESCRIPTION', '')
+
+    lines = [f"# {site_name}", "", f"> {description}", "", "## Blog", ""]
+    for article in article_generator.articles:  # newest first (see .dates)
+        md_relpath = _os.path.dirname(article.save_as) + '.md'
+        md_url = f"{site_url}/{md_relpath}" if site_url else f"/{md_relpath}"
+        desc = _plain_summary(article)
+        entry = f"- [{article.title}]({md_url})"
+        if desc:
+            entry += f": {desc}"
+        lines.append(entry)
+
+    path = _os.path.join(article_generator.output_path, 'llms.txt')
+    _os.makedirs(_os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write("\n".join(lines) + "\n")
+
+
 from pelican import signals as _signals
 _signals.article_generator_finalized.connect(_write_markdown_mirrors)
+_signals.article_generator_finalized.connect(_write_llms_txt)
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
