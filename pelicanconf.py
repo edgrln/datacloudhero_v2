@@ -219,6 +219,26 @@ def _write_llms_txt(article_generator):
         f.write("\n".join(lines) + "\n")
 
 
+def _write_robots_txt(article_generator):
+    """Write a minimal, permissive /robots.txt that just points crawlers at
+    the sitemap. Note: this domain is proxied through Cloudflare, which has
+    been observed overriding/intercepting robots.txt at the edge with its
+    own "Content Signals" policy text regardless of what the origin serves
+    - if that's still happening, this file won't be what crawlers actually
+    see, and the fix is in the Cloudflare dashboard, not here."""
+    site_url = article_generator.settings.get('SITEURL', '') or ''
+    lines = [
+        "User-agent: *",
+        "Disallow:",
+        "",
+        f"Sitemap: {site_url}/sitemap.xml" if site_url else "Sitemap: /sitemap.xml",
+    ]
+    path = _os.path.join(article_generator.output_path, 'robots.txt')
+    _os.makedirs(_os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write("\n".join(lines) + "\n")
+
+
 def _queue_homepage_for_sitemap(article_generator):
     """The site root (content/extra/index.html, see STATIC_PATHS below) is
     copied to output/index.html verbatim rather than rendered by Pelican,
@@ -234,6 +254,7 @@ def _queue_homepage_for_sitemap(article_generator):
 from pelican import signals as _signals
 _signals.article_generator_finalized.connect(_write_markdown_mirrors)
 _signals.article_generator_finalized.connect(_write_llms_txt)
+_signals.article_generator_finalized.connect(_write_robots_txt)
 _signals.article_generator_finalized.connect(_queue_homepage_for_sitemap)
 
 # Uncomment following line if you want document-relative URLs when developing
