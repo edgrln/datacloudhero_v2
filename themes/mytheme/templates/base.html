@@ -138,7 +138,7 @@
                     {% for title, link in MENUITEMS %}
                     <li class="nav-item"><a class="nav-link" href="{{ link }}">{{ title }}</a></li>
                     {% endfor %}
-                    {% for page in pages %}
+                    {% for page in pages if page.template != 'landing' %}
                     <li class="nav-item"><a class="nav-link" href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
