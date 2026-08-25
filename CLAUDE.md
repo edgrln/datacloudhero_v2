@@ -9,8 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A [Pelican](https://getpelican.com) (Python static site generator) project for **datacloudhero.com**. Content is written in Markdown, rendered through a custom theme (`themes/mytheme`), and the built `output/` is deployed as a static site.
 
 The site has two independent parts that never share templates:
-- **Site root** (`/`) — a single self-contained static HTML landing page, hand-authored, not run through Pelican's theme/Jinja pipeline at all.
-- **`/blog/`** — everything Pelican actually generates (articles, tags, categories, authors, search index) via `themes/mytheme`.
+- **Site root** (`/`) — a Pelican `Page` rendered through its own standalone template (`landing.html`), hand-authored, entirely separate from the blog's Bootstrap theme (see below).
+- **`/blog/`** — everything else Pelican generates (articles, tags, categories, authors, search index) via `themes/mytheme`.
 
 ## Commands
 
@@ -38,15 +38,21 @@ Deployment is automatic: `.github/workflows/gh-pages.yml` runs `pelican content 
 
 Every content type is deliberately routed under `blog/...` (`ARTICLE_URL`, `ARTICLE_SAVE_AS`, `TAG_URL`, `CATEGORY_URL`, `AUTHOR_URL`, `INDEX_SAVE_AS`, etc. are all overridden away from Pelican's defaults). The site root path is reserved for the static landing page. When adding any new content type/URL, follow this `blog/{...}` convention rather than Pelican's defaults.
 
-### The landing page bypasses Pelican's templates
+### The landing page is a real Page, but with its own document shell
 
-`content/extra/index.html` is copied verbatim to `output/index.html` via `STATIC_PATHS` + `EXTRA_PATH_METADATA` (not the `PAGES` mechanism — `ARTICLE_EXCLUDES`/`PAGE_EXCLUDES = ['extra']` keep the content readers from also trying to parse it). It's a fully standalone HTML file with its own inline `<style>`, Tailwind CDN, Alpine.js, and Google Fonts — it does **not** extend `themes/mytheme/templates/base.html`. Any change to nav/branding/assets on the landing page has to be made directly in that file; it will not pick up changes made to the theme templates.
+The landing page is a real Pelican `Page` (`content/pages/landing.html` + `themes/mytheme/templates/landing.html`), but it deliberately does **not** extend `themes/mytheme/templates/base.html` — it has an entirely different visual identity (dark hero, Tailwind CDN utility classes, Alpine.js interactivity, Google Fonts) from the Bootstrap-based blog theme, so it carries its own full `<head>`/`<body>` shell instead.
 
-Because it's standalone, asset paths inside it are easy to get wrong: theme static files (logo, favicon, social-card) live under `theme/img/...` in the built output (see below), not `img/...` — a past bug was the landing page linking to the wrong prefix.
+The split, and why it's shaped this way: Pelican's built-in `HTMLReader` (used for `.html` content files) only extracts `<title>` and `<meta name="...">` from `<head>`, and everything between `<body>`/`</body>` — it silently drops everything else in `<head>` (so raw `<style>` blocks, CDN `<script src>` tags, font links can't live in the content file) and it discards attributes on the `<body>` tag itself (so anything that has to be on `<body>`, like Alpine's root `x-data`/`x-init` scope, can't live in the content file either). Given that:
+- `themes/mytheme/templates/landing.html` holds the whole document shell: `<head>` (Tailwind CDN, Alpine.js, Google Fonts, the custom `<style>` blocks, OG/Twitter meta), the `<body class="grid-bg" x-data="{...}" x-init="...">` opening tag (this is where the page's Alpine root scope - menu state, contact form, reveal-on-scroll - lives), then `{{ page.content|safe }}`, then the trailing footer `<script>` tags before `</body></html>`.
+- `content/pages/landing.html` holds just what used to be *inside* `<body>` (nav, hero, services, stack, process, contact modal, FAQ), plus a small metadata `<head>` using Pelican's HTML-page convention (`<meta name="save_as" content="index.html">`, `<meta name="url" content="">`, `<meta name="template" content="landing">`) to route it to `output/index.html` via the `landing` template instead of the blog's default `PAGE_URL`/`PAGE_SAVE_AS` pattern.
 
-Two more root-level files ride along in the same `STATIC_PATHS`/`EXTRA_PATH_METADATA` pair:
+`ARTICLE_EXCLUDES` includes `'pages'` for a non-obvious reason: `ARTICLE_PATHS` defaults to `[""]`, so Pelican's `ArticlesGenerator` walks *all* of `content/`, including `content/pages/` — without the exclude, `landing.html` gets picked up as both an Article and a Page and they race to write `output/index.html`.
+
+Because the landing template is standalone, asset paths inside it are easy to get wrong: theme static files (logo, favicon, social-card) live under `theme/img/...` in the built output (see below), not `img/...` — a past bug was the landing page linking to the wrong prefix.
+
+Two more root-level files ride along via `STATIC_PATHS`/`EXTRA_PATH_METADATA` (unrelated to the Page above — these are still verbatim-copied static files, not Pelican content):
 - `content/extra/favicon.ico` — a duplicate of `themes/mytheme/static/img/favicon.ico`, kept only so `/favicon.ico` exists at the domain root (browsers fall back to fetching that path for tabs with no `<link rel="icon">` to read, e.g. the raw-text `blog/{slug}.md` mirrors below).
-- `content/extra/index.md` — a **hand-written** Markdown summary of the landing page (services, stack, process, contact), linked from `llms.txt`. It is *not* auto-derived from `index.html`: that page has no clean text to extract (nav/tech-stack markup is legitimately duplicated for responsive/marquee reasons, the contact email is Cloudflare-obfuscated in the source, and the FAQ copy only exists inside an Alpine `x-for="... in [...]"` JS array, invisible to any HTML→text pass). Update it by hand when the pitch changes materially.
+- `content/extra/index.md` — a **hand-written** Markdown summary of the landing page (services, stack, process, contact), linked from `llms.txt`. It is *not* auto-derived from `content/pages/landing.html`: that page has no clean text to extract (nav/tech-stack markup is legitimately duplicated for responsive/marquee reasons, the contact email is Cloudflare-obfuscated in the source, and the FAQ copy only exists inside an Alpine `x-for="... in [...]"` JS array, invisible to any HTML→text pass). Update it by hand when the pitch changes materially.
 
 The landing page's contact `mailto:` (and the blog's `CTA_BUTTON_LINK`/`CTA_FOOTNOTE` in `pelicanconf.py`) is `info@datacloudhero.com`. Note Cloudflare's Email Address Obfuscation rewrites any plain `mailto:` into a `data-cfemail="..."` blob at the edge on every response — seeing that in a live `curl`/view-source is expected, not a sign the address reverted; decode it (XOR each byte with the first byte) to check what it actually points at.
 
@@ -66,16 +72,15 @@ Markdown files in `content/` (flat, not `content/articles/`). Metadata is the cl
 
 ### Generated machine-readable mirrors (`pelicanconf.py`, bottom half)
 
-Four custom generators are wired up via `pelican.signals.article_generator_finalized` directly inside `pelicanconf.py` (no separate plugin package/folder for these — they're plain functions + `_signals.connect(...)` calls at module scope):
+Three custom generators are wired up via `pelican.signals.article_generator_finalized` directly inside `pelicanconf.py` (no separate plugin package/folder for these — they're plain functions + `_signals.connect(...)` calls at module scope):
 
 - `_write_markdown_mirrors` — for every article `blog/{slug}/index.html`, also writes a sibling `blog/{slug}.md` containing the raw Markdown body (metadata block stripped) plus a short source/date header. This is what the "Copy page as Markdown" article button, `llms.txt`, and the ChatGPT/Claude/Perplexity links in `ai_actions.html` all point at.
 - `_write_llms_txt` — writes `output/llms.txt` at the site root, following the [llmstxt.org](https://llmstxt.org) format: `# title` / `> summary`, a `## Site` section linking `content/extra/index.md`, then a `## Blog` section with `- [title](md_url): desc` for every article.
 - `_write_robots_txt` — writes a minimal `output/robots.txt` (`Disallow:` = allow everything) pointing `Sitemap:` at `sitemap.xml`. The domain is proxied through Cloudflare, which was observed serving its own "Content Signals" boilerplate text at that path *only as a fallback* when origin had no `robots.txt` at all — once this file exists, Cloudflare passes it through untouched.
-- `_queue_homepage_for_sitemap` — the `pelican-sitemap` plugin (real 3rd-party plugin, pinned via `PLUGINS = ['sitemap']` and `SITEMAP = {...}`, both in `pelicanconf.py`) builds `sitemap.xml` from the `content_written` signal, which only fires for pages Pelican's `Writer` renders — the `STATIC_PATHS`-copied landing page never fires it and would otherwise be silently missing from the sitemap. This function fires `content_written` for `output_path/index.html` manually so the plugin's own queue picks it up. Don't try to "fix" this by post-processing `sitemap.xml` after the fact on the `finalized` signal instead — receiver order on a single Pelican/blinker signal is explicitly undefined, so a handler racing the plugin's own write is not reliable; injecting into its queue *before* it writes, via the same signal it already listens on, is.
 
-`PLUGINS` is pinned deliberately: leaving it unset makes Pelican auto-load *any* installed `pelican.plugins.*` package, which previously caused `sitemap.xml` to appear in local dev (because `pelican-sitemap` happened to be pip-installed there) while being silently absent from the real CI build (`requirements.txt` didn't have it) — pin new plugins in both `PLUGINS` and `requirements.txt` together, never rely on auto-discovery.
+`sitemap.xml` itself comes from the real 3rd-party `pelican-sitemap` plugin, pinned via `PLUGINS = ['sitemap']` and `SITEMAP = {...}` (both in `pelicanconf.py`) rather than left to Pelican's auto-discovery — leaving `PLUGINS` unset makes Pelican auto-load *any* installed `pelican.plugins.*` package, which previously caused `sitemap.xml` to appear in local dev (because `pelican-sitemap` happened to be pip-installed there) while being silently absent from the real CI build (`requirements.txt` didn't have it). Pin new plugins in both `PLUGINS` and `requirements.txt` together, never rely on auto-discovery. (There used to be a fourth generator, `_queue_homepage_for_sitemap`, that manually fired `content_written` for the landing page because it was a `STATIC_PATHS`-copied file the sitemap plugin's listener never saw — removed once the landing page became a real Page, see below, since it now fires that signal on its own.)
 
-All four run automatically on every build (dev and publish) — no extra command needed. If article URL/save-as conventions in `pelicanconf.py` change, the `_os.path.dirname(article.save_as) + '.md'` path derivation used by more than one of these functions needs to change with them.
+All three run automatically on every build (dev and publish) — no extra command needed. If article URL/save-as conventions in `pelicanconf.py` change, the `_os.path.dirname(article.save_as) + '.md'` path derivation used by more than one of these functions needs to change with them.
 
 ### `ai_actions.html` partial
 

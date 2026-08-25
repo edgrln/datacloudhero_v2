@@ -106,28 +106,39 @@ DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "searc
 SEARCH_SAVE_AS = "blog/search-index.json"
 SEARCH_URL = "blog/search-index.json"
 
-# Landing page: a self-contained static HTML file copied verbatim to the
-# site root (it is not run through the blog theme/templates at all).
+# Landing page: content/pages/landing.html is a real Pelican Page (see
+# themes/mytheme/templates/landing.html), NOT run through the blog
+# theme/templates - it has its own standalone <head>/<body> shell (Tailwind
+# CDN, Alpine.js, custom fonts/CSS) unrelated to base.html. Its per-page
+# <meta name="save_as"/"url"/"template"> tags route it to output/index.html
+# using the "landing" template instead of the blog PAGE_URL/PAGE_SAVE_AS
+# pattern below. (It used to be a hand-copied static file; converted so it
+# can go through Pelican's normal pipeline - i18n plugins, Jinja variables,
+# etc. - like any other content.)
 #
-# favicon.ico is also duplicated to the site root here (same file as
+# favicon.ico is duplicated to the site root here (same file as
 # themes/mytheme/static/img/favicon.ico). Browsers fall back to fetching
 # /favicon.ico at the domain root for tabs that have no <link rel="icon">
 # to read from - e.g. the raw-text blog/{slug}.md mirrors - so a root-level
 # copy is what lets those tabs pick up a favicon at all.
 #
 # extra/index.md is a short hand-written Markdown summary of the landing
-# page (it is NOT auto-derived from index.html - that page is a big
+# page (it is NOT auto-derived from landing.html - that page is a big
 # Tailwind/Alpine.js file with no clean text source to extract from, e.g.
 # its FAQ copy only exists inside an Alpine `x-for` JS array). Keep it in
 # sync by hand when the pitch on the landing page changes materially.
-STATIC_PATHS = ['extra/index.html', 'extra/index.md', 'extra/favicon.ico']
+STATIC_PATHS = ['extra/index.md', 'extra/favicon.ico']
 EXTRA_PATH_METADATA = {
-    'extra/index.html': {'path': 'index.html'},
     'extra/index.md': {'path': 'index.md'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
 }
-# Keep the article/page generators from also trying to parse it as content
-ARTICLE_EXCLUDES = ['extra']
+# Keep the article/page generators from also trying to parse content/extra
+# (the static passthrough files above) as blog content. ARTICLE_PATHS
+# defaults to [""] - i.e. Pelican's ArticlesGenerator walks the *entire*
+# content/ tree, including content/pages/ - so 'pages' has to be excluded
+# here too, or content/pages/landing.html gets picked up as both an
+# Article and a Page and they race to write the same output/index.html.
+ARTICLE_EXCLUDES = ['extra', 'pages']
 PAGE_EXCLUDES = ['extra']
 
 import json as _json
@@ -258,23 +269,14 @@ def _write_robots_txt(article_generator):
         f.write("\n".join(lines) + "\n")
 
 
-def _queue_homepage_for_sitemap(article_generator):
-    """The site root (content/extra/index.html, see STATIC_PATHS below) is
-    copied to output/index.html verbatim rather than rendered by Pelican,
-    so it never fires the `content_written` signal the sitemap plugin
-    listens on - it would otherwise be silently missing from sitemap.xml.
-    Fire that signal for it ourselves so the plugin queues it exactly like
-    any other page; this only has an effect if the sitemap plugin (or
-    something else listening for content_written) is actually loaded."""
-    homepage_path = _os.path.join(article_generator.output_path, 'index.html')
-    _signals.content_written.send(homepage_path, context={})
-
-
 from pelican import signals as _signals
 _signals.article_generator_finalized.connect(_write_markdown_mirrors)
 _signals.article_generator_finalized.connect(_write_llms_txt)
 _signals.article_generator_finalized.connect(_write_robots_txt)
-_signals.article_generator_finalized.connect(_queue_homepage_for_sitemap)
+# NOTE: no manual sitemap injection for the homepage anymore - now that
+# content/pages/landing.html is a real Pelican Page (see STATIC_PATHS
+# comment above), it fires `content_written` on its own like any other
+# page, and the sitemap plugin queues it through its normal path.
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
