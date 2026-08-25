@@ -26,8 +26,8 @@ AUTHORS_INFO = {
 CTA_TITLE = "Let's build something great"
 CTA_TEXT = "Опишите вашу задачу — обсудим без лишних продаж, чисто по делу."
 CTA_BUTTON_TEXT = "Написать"
-CTA_BUTTON_LINK = "mailto:you@example.com"
-CTA_FOOTNOTE = "you@example.com · Работаю удалённо"
+CTA_BUTTON_LINK = "mailto:info@datacloudhero.com"
+CTA_FOOTNOTE = "info@datacloudhero.com · Работаю удалённо"
 
 TIMEZONE = 'Europe/Rome'
 
@@ -114,9 +114,16 @@ SEARCH_URL = "blog/search-index.json"
 # /favicon.ico at the domain root for tabs that have no <link rel="icon">
 # to read from - e.g. the raw-text blog/{slug}.md mirrors - so a root-level
 # copy is what lets those tabs pick up a favicon at all.
-STATIC_PATHS = ['extra/index.html', 'extra/favicon.ico']
+#
+# extra/index.md is a short hand-written Markdown summary of the landing
+# page (it is NOT auto-derived from index.html - that page is a big
+# Tailwind/Alpine.js file with no clean text source to extract from, e.g.
+# its FAQ copy only exists inside an Alpine `x-for` JS array). Keep it in
+# sync by hand when the pitch on the landing page changes materially.
+STATIC_PATHS = ['extra/index.html', 'extra/index.md', 'extra/favicon.ico']
 EXTRA_PATH_METADATA = {
     'extra/index.html': {'path': 'index.html'},
+    'extra/index.md': {'path': 'index.md'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
 }
 # Keep the article/page generators from also trying to parse it as content
@@ -203,7 +210,19 @@ def _write_llms_txt(article_generator):
     site_name = settings.get('SITENAME', '')
     description = settings.get('SITE_DESCRIPTION', '')
 
-    lines = [f"# {site_name}", "", f"> {description}", "", "## Blog", ""]
+    home_md_url = f"{site_url}/index.md" if site_url else "/index.md"
+    lines = [
+        f"# {site_name}",
+        "",
+        f"> {description}",
+        "",
+        "## Site",
+        "",
+        f"- [Homepage]({home_md_url}): Services, tech stack, process and contact.",
+        "",
+        "## Blog",
+        "",
+    ]
     for article in article_generator.articles:  # newest first (see .dates)
         md_relpath = _os.path.dirname(article.save_as) + '.md'
         md_url = f"{site_url}/{md_relpath}" if site_url else f"/{md_relpath}"
