@@ -1,4 +1,6 @@
 Title: First Blog Post
+Slug: first-blog-post
+Lang: en
 Date: 2026-12-03 10:20
 Category: Food
 Author: Edgar L

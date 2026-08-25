@@ -1,7 +1,7 @@
 {% extends "blog_base.html" %}
 
 {% block blog_content %}
-<h1 class="mb-4">Latest posts</h1>
+<h1 class="mb-4">{{ t.latest_posts }}</h1>
 
 {% set next_url = (SITEURL ~ '/' ~ articles_next_page.url) if articles_page.has_next() else '' %}
 <div x-data="infiniteScroll('{{ next_url }}')" x-init="init()">
@@ -27,21 +27,21 @@
 
             {% if article.tags %}
             <div class="mb-3 d-flex flex-wrap align-items-center gap-1">
-                <strong class="me-2">Tags:</strong>
+                <strong class="me-2">{{ t.tags }}</strong>
                 {% for tag in article.tags %}
                 <a href="{{ SITEURL }}/{{ tag.url }}" class="tag-pill">{{ tag }}</a>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline-primary btn-sm">Read more</a>
+            <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline-primary btn-sm">{{ t.read_more }}</a>
         </article>
         {% endfor %}
     </div>
 
     <div id="pagination-data" data-next-url="{{ next_url }}" class="d-none"></div>
 
-    <div x-show="loading" x-cloak class="text-center text-muted py-4">Loading more posts…</div>
+    <div x-show="loading" x-cloak class="text-center text-muted py-4">{{ t.loading_more }}</div>
     <div x-ref="sentinel"></div>
 
     <noscript>
@@ -49,10 +49,10 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 {% if articles_page.has_previous() %}
-                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_previous_page.url }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_previous_page.url }}">{{ t.previous }}</a></li>
                 {% endif %}
                 {% if articles_page.has_next() %}
-                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_next_page.url }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_next_page.url }}">{{ t.next }}</a></li>
                 {% endif %}
             </ul>
         </nav>

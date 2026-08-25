@@ -31,7 +31,144 @@ CTA_FOOTNOTE = "info@datacloudhero.com · Работаю удалённо"
 
 TIMEZONE = 'Europe/Rome'
 
-DEFAULT_LANG = 'En'
+DEFAULT_LANG = 'en'
+
+# Supported site languages: code -> display label for the language switcher.
+# Order here is the order links render in. Adding a language means: add it
+# here, add a UI_STRINGS['xx'] bundle below, and start writing content/{xx}/
+# articles + a content/pages/landing-{xx}.html.
+LANGUAGES = {
+    'en': 'EN',
+    'fr': 'FR',
+    'de': 'DE',
+    'es': 'ES',
+}
+
+# Translations for template chrome (nav/footer/buttons/etc.) - NOT for
+# content itself (articles/pages are translated as separate content files).
+# Templates look these up via UI_STRINGS[lang][key], where `lang` is the
+# current article/page's `.lang` (see get_ui_lang() in blog_base.html and
+# landing.html). Keep keys in sync across all four language dicts.
+UI_STRINGS = {
+    'en': {
+        'blog_nav': 'Blog',
+        'all_posts': 'All posts',
+        'latest_posts': 'Latest posts',
+        'read_more': 'Read more',
+        'back_to_posts': '← Back to all posts',
+        'tags': 'Tags:',
+        'min_read': 'min read',
+        'loading_more': 'Loading more posts…',
+        'previous': 'Previous',
+        'next': 'Next',
+        'search_placeholder': 'Search',
+        'no_results': 'No results found',
+        'see_all_results': 'See all results',
+        'copy_page': 'Copy page',
+        'copy_page_md': 'Copy page as Markdown',
+        'view_as_md': 'View as Markdown',
+        'open_in': 'Open in {name}',
+        'copied': 'Copied!',
+        'copy_failed': 'Copy failed',
+        'ready_to_start': 'Ready to start?',
+    },
+    'fr': {
+        'blog_nav': 'Blog',
+        'all_posts': 'Tous les articles',
+        'latest_posts': 'Derniers articles',
+        'read_more': 'Lire la suite',
+        'back_to_posts': '← Retour à tous les articles',
+        'tags': 'Étiquettes :',
+        'min_read': 'min de lecture',
+        'loading_more': 'Chargement d’articles supplémentaires…',
+        'previous': 'Précédent',
+        'next': 'Suivant',
+        'search_placeholder': 'Rechercher',
+        'no_results': 'Aucun résultat trouvé',
+        'see_all_results': 'Voir tous les résultats',
+        'copy_page': 'Copier la page',
+        'copy_page_md': 'Copier la page en Markdown',
+        'view_as_md': 'Voir en Markdown',
+        'open_in': 'Ouvrir dans {name}',
+        'copied': 'Copié !',
+        'copy_failed': 'Échec de la copie',
+        'ready_to_start': 'Prêt à commencer ?',
+    },
+    'de': {
+        'blog_nav': 'Blog',
+        'all_posts': 'Alle Beiträge',
+        'latest_posts': 'Neueste Beiträge',
+        'read_more': 'Weiterlesen',
+        'back_to_posts': '← Zurück zu allen Beiträgen',
+        'tags': 'Tags:',
+        'min_read': 'Min. Lesezeit',
+        'loading_more': 'Weitere Beiträge werden geladen…',
+        'previous': 'Zurück',
+        'next': 'Weiter',
+        'search_placeholder': 'Suchen',
+        'no_results': 'Keine Ergebnisse gefunden',
+        'see_all_results': 'Alle Ergebnisse anzeigen',
+        'copy_page': 'Seite kopieren',
+        'copy_page_md': 'Seite als Markdown kopieren',
+        'view_as_md': 'Als Markdown anzeigen',
+        'open_in': 'In {name} öffnen',
+        'copied': 'Kopiert!',
+        'copy_failed': 'Kopieren fehlgeschlagen',
+        'ready_to_start': 'Bereit loszulegen?',
+    },
+    'es': {
+        'blog_nav': 'Blog',
+        'all_posts': 'Todas las entradas',
+        'latest_posts': 'Últimas entradas',
+        'read_more': 'Leer más',
+        'back_to_posts': '← Volver a todas las entradas',
+        'tags': 'Etiquetas:',
+        'min_read': 'min de lectura',
+        'loading_more': 'Cargando más entradas…',
+        'previous': 'Anterior',
+        'next': 'Siguiente',
+        'search_placeholder': 'Buscar',
+        'no_results': 'No se encontraron resultados',
+        'see_all_results': 'Ver todos los resultados',
+        'copy_page': 'Copiar página',
+        'copy_page_md': 'Copiar página como Markdown',
+        'view_as_md': 'Ver como Markdown',
+        'open_in': 'Abrir en {name}',
+        'copied': '¡Copiado!',
+        'copy_failed': 'Error al copiar',
+        'ready_to_start': '¿Listo para empezar?',
+    },
+}
+
+# Per-language CTA box copy (see partials/cta.html). English keeps using the
+# CTA_* settings above (unchanged, pre-existing copy); this only covers the
+# translated languages.
+CTA_STRINGS = {
+    'fr': {
+        'title': "Construisons quelque chose de solide",
+        'text': "Décrivez votre projet — on en discute directement, sans discours commercial.",
+        'button_text': "Écrivez-nous",
+        'footnote': "info@datacloudhero.com · Travail à distance",
+    },
+    'de': {
+        'title': "Lassen Sie uns etwas Gutes aufbauen",
+        'text': "Beschreiben Sie Ihre Herausforderung — wir besprechen sie direkt, ohne Verkaufsgespräch.",
+        'button_text': "Schreiben Sie uns",
+        'footnote': "info@datacloudhero.com · Arbeite remote",
+    },
+    'es': {
+        'title': "Construyamos algo grande",
+        'text': "Describa su desafío — hablamos directamente, sin discurso de ventas.",
+        'button_text': "Escríbenos",
+        'footnote': "info@datacloudhero.com · Trabajo en remoto",
+    },
+}
+
+JINJA_GLOBALS = {
+    'UI_STRINGS': UI_STRINGS,
+    'CTA_STRINGS': CTA_STRINGS,
+    'SITE_LANGUAGES': LANGUAGES,
+}
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -84,6 +221,14 @@ ARTICLE_URL = 'blog/{slug}/'
 ARTICLE_SAVE_AS = 'blog/{slug}/index.html'
 PAGE_URL = 'blog/{slug}/'
 PAGE_SAVE_AS = 'blog/{slug}/index.html'
+# Non-default-language articles (Lang: fr/de/es + a Slug: matching their
+# English original - see content/fr/, content/de/, content/es/) get a
+# /{lang}/ prefix instead of living at the same /blog/{slug}/ URL. Pelican
+# links same-slug articles across languages automatically via
+# ARTICLE_TRANSLATION_ID (default: 'slug') - see article.translations in
+# templates for the language switcher.
+ARTICLE_LANG_URL = '{lang}/blog/{slug}/'
+ARTICLE_LANG_SAVE_AS = '{lang}/blog/{slug}/index.html'
 AUTHOR_URL = 'blog/author/{slug}/'
 AUTHOR_SAVE_AS = 'blog/author/{slug}/index.html'
 CATEGORY_URL = 'blog/category/{slug}/'
@@ -176,7 +321,11 @@ def _strip_pelican_metadata(raw_text):
 
 def _write_markdown_mirrors(article_generator):
     site_url = article_generator.settings.get('SITEURL', '') or ''
-    for article in article_generator.articles:
+    # .articles only holds one canonical (DEFAULT_LANG) item per slug -
+    # French/German/Spanish versions of that same slug live in .translations
+    # instead (see _expose_translations_to_context) and need mirrors too.
+    all_articles = list(article_generator.articles) + list(article_generator.translations)
+    for article in all_articles:
         source_path = getattr(article, 'source_path', None)
         if not source_path or not _os.path.exists(source_path):
             continue
@@ -269,10 +418,62 @@ def _write_robots_txt(article_generator):
         f.write("\n".join(lines) + "\n")
 
 
+def _expose_translations_to_context(article_generator):
+    """Pelican's shared Jinja context only exposes `articles` - one
+    canonical item per translation group (ARTICLE_TRANSLATION_ID='slug'),
+    chosen by DEFAULT_LANG. Every other-language version of that same slug
+    (our French/German/Spanish articles) lives in
+    `article_generator.translations` instead and is otherwise invisible to
+    templates. Expose it under the same shared context dict so templates
+    can look across all languages via `articles + translations` (see
+    blog_base.html's sidebar and _write_lang_blog_indexes below)."""
+    article_generator.context['translations'] = article_generator.translations
+
+
+def _write_lang_blog_indexes(article_generator):
+    """/blog/ (English, the default language) is generated normally by
+    Pelican's own IndexesGenerator from ARTICLE_URL/INDEX_SAVE_AS. For each
+    *other* language in LANGUAGES, hand-render an equivalent listing containing
+    only that language's articles, using a dedicated template (no pagination
+    machinery - there isn't enough content per language yet to need it).
+    Written directly (bypassing Pelican's Writer, like our other custom
+    generators), so content_written is fired manually for the sitemap plugin
+    to pick these pages up."""
+    settings = article_generator.settings
+    languages = settings.get('LANGUAGES', {})
+    default_lang = settings.get('DEFAULT_LANG', 'en').lower()
+    all_articles = list(article_generator.articles) + list(article_generator.translations)
+
+    template = article_generator.get_template('blog_index_lang')
+    for lang in languages:
+        if lang == default_lang:
+            continue  # /blog/ itself already covers the default language
+        lang_articles = sorted(
+            (a for a in all_articles if a.lang == lang),
+            key=lambda a: a.date,
+            reverse=True,
+        )
+        if not lang_articles:
+            continue
+
+        local_context = dict(article_generator.context)
+        local_context['articles'] = lang_articles
+        local_context['current_lang'] = lang
+        html = template.render(local_context)
+
+        out_path = _os.path.join(article_generator.output_path, lang, 'blog', 'index.html')
+        _os.makedirs(_os.path.dirname(out_path), exist_ok=True)
+        with open(out_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        _signals.content_written.send(out_path, context={})
+
+
 from pelican import signals as _signals
 _signals.article_generator_finalized.connect(_write_markdown_mirrors)
 _signals.article_generator_finalized.connect(_write_llms_txt)
 _signals.article_generator_finalized.connect(_write_robots_txt)
+_signals.article_generator_finalized.connect(_expose_translations_to_context)
+_signals.article_generator_finalized.connect(_write_lang_blog_indexes)
 # NOTE: no manual sitemap injection for the homepage anymore - now that
 # content/pages/landing.html is a real Pelican Page (see STATIC_PATHS
 # comment above), it fires `content_written` on its own like any other

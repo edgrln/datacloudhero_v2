@@ -1,11 +1,22 @@
-{% if CTA_TITLE %}
+{# English (default) keeps using the CTA_* settings from pelicanconf.py
+   unchanged; other languages get their copy from CTA_STRINGS[current_lang]
+   (also in pelicanconf.py). Expects `current_lang`/`t` in scope - both are
+   set by blog_base.html, which every template including this one extends
+   through. #}
+{% set cta = CTA_STRINGS.get(current_lang) if current_lang != DEFAULT_LANG else None %}
+{% set cta_title = cta.title if cta else CTA_TITLE %}
+{% set cta_text = cta.text if cta else CTA_TEXT %}
+{% set cta_button_text = cta.button_text if cta else CTA_BUTTON_TEXT %}
+{% set cta_button_link = CTA_BUTTON_LINK %}
+{% set cta_footnote = cta.footnote if cta else CTA_FOOTNOTE %}
+{% if cta_title %}
 <div class="cta-box my-5 p-4 p-md-5 text-center">
-    <p class="text-uppercase small fw-semibold text-muted mb-2">Ready to start?</p>
-    <h2 class="mb-3">{{ CTA_TITLE }}</h2>
-    {% if CTA_TEXT %}<p class="text-muted mb-4 mx-auto cta-text">{{ CTA_TEXT }}</p>{% endif %}
-    {% if CTA_BUTTON_TEXT and CTA_BUTTON_LINK %}
-    <a href="{{ CTA_BUTTON_LINK }}" class="btn btn-dark btn-lg px-4">{{ CTA_BUTTON_TEXT }}</a>
+    <p class="text-uppercase small fw-semibold text-muted mb-2">{{ t.ready_to_start }}</p>
+    <h2 class="mb-3">{{ cta_title }}</h2>
+    {% if cta_text %}<p class="text-muted mb-4 mx-auto cta-text">{{ cta_text }}</p>{% endif %}
+    {% if cta_button_text and cta_button_link %}
+    <a href="{{ cta_button_link }}" class="btn btn-dark btn-lg px-4">{{ cta_button_text }}</a>
     {% endif %}
-    {% if CTA_FOOTNOTE %}<p class="text-muted small mt-3 mb-0">{{ CTA_FOOTNOTE }}</p>{% endif %}
+    {% if cta_footnote %}<p class="text-muted small mt-3 mb-0">{{ cta_footnote }}</p>{% endif %}
 </div>
 {% endif %}

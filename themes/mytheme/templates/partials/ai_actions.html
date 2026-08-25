@@ -7,18 +7,18 @@
 <div class="dropdown ai-actions mb-4">
     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
             id="aiActionsBtn-{{ article.slug }}" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="js-ai-actions-label">Copy page</span>
+        <span class="js-ai-actions-label">{{ t.copy_page }}</span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="aiActionsBtn-{{ article.slug }}">
         <li>
             <button class="dropdown-item js-copy-markdown" type="button" data-md-url="{{ article_md_url }}">
-                Copy page as Markdown
+                {{ t.copy_page_md }}
             </button>
         </li>
-        <li><a class="dropdown-item" href="{{ article_md_url }}" target="_blank" rel="noopener">View as Markdown</a></li>
+        <li><a class="dropdown-item" href="{{ article_md_url }}" target="_blank" rel="noopener">{{ t.view_as_md }}</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="https://chatgpt.com/?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in ChatGPT</a></li>
-        <li><a class="dropdown-item" href="https://claude.ai/new?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in Claude</a></li>
-        <li><a class="dropdown-item" href="https://www.perplexity.ai/search?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in Perplexity</a></li>
+        <li><a class="dropdown-item" href="https://chatgpt.com/?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">{{ t.open_in.format(name='ChatGPT') }}</a></li>
+        <li><a class="dropdown-item" href="https://claude.ai/new?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">{{ t.open_in.format(name='Claude') }}</a></li>
+        <li><a class="dropdown-item" href="https://www.perplexity.ai/search?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">{{ t.open_in.format(name='Perplexity') }}</a></li>
     </ul>
 </div>

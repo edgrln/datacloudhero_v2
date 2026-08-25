@@ -1,11 +1,27 @@
 {% extends "base.html" %}
 
+{# Current UI language for this page: an explicit `current_lang` in context
+   (set by _write_lang_blog_indexes for the per-language blog index) wins;
+   otherwise fall back to the current article/page's own `.lang`, then to
+   the site default. Used both for the UI_STRINGS lookup and to keep the
+   sidebar scoped to one language (see _expose_translations_to_context in
+   pelicanconf.py for why `translations` is needed here too). #}
+{% set current_lang = current_lang if current_lang is defined else (article.lang if article is defined else (page.lang if page is defined else DEFAULT_LANG)) %}
+{% set t = UI_STRINGS[current_lang] %}
+{# `articles` is already the full per-language list on the custom
+   per-language blog index (see _write_lang_blog_indexes) but only the
+   DEFAULT_LANG canonical items elsewhere (see _expose_translations_to_context)
+   - concatenating unconditionally would double-count on the former, so
+   dedupe by source_path either way. #}
+{% set all_lang_articles = (articles + (translations if translations is defined else []))|unique(attribute='source_path')|list %}
+
 {% block content %}
 <div class="row">
     <div class="col-lg-3 mb-5">
         <div class="sidebar-sticky">
-            <div class="sidebar-heading">All posts</div>
-            {% set articles_by_year = articles|groupby('date.year')|reverse %}
+            <div class="sidebar-heading">{{ t.all_posts }}</div>
+            {% set sidebar_articles = all_lang_articles|selectattr('lang', 'equalto', current_lang)|list %}
+            {% set articles_by_year = sidebar_articles|groupby('date.year')|reverse %}
             {% for year, year_articles in articles_by_year %}
             <div class="sidebar-year">{{ year }}</div>
             <ul class="list-unstyled sidebar-list mb-3">

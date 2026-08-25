@@ -5,7 +5,7 @@
 {% block blog_content %}
 <article class="article-single">
     <h1 class="mb-2">{{ article.title }}</h1>
-    <p class="text-muted mb-4">{{ article.locale_date }} · {{ (article.content|striptags|wordcount // 200) + 1 }} min read</p>
+    <p class="text-muted mb-4">{{ article.locale_date }} · {{ (article.content|striptags|wordcount // 200) + 1 }} {{ t.min_read }}</p>
 
     <div class="d-flex flex-wrap gap-4 mb-4">
         {% if article.authors %}
@@ -27,7 +27,7 @@
 
     {% if article.tags %}
     <div class="mt-4 d-flex flex-wrap align-items-center gap-1">
-        <strong class="me-2">Tags:</strong>
+        <strong class="me-2">{{ t.tags }}</strong>
         {% for tag in article.tags %}
         <a href="{{ SITEURL }}/{{ tag.url }}" class="tag-pill">{{ tag }}</a>
         {% endfor %}
@@ -38,6 +38,7 @@
 </article>
 
 <div class="mt-4">
-    <a href="{{ SITEURL }}/blog/" class="btn btn-outline-secondary btn-sm">&larr; Back to all posts</a>
+    {% set blog_root = (current_lang + '/blog/') if current_lang != DEFAULT_LANG else 'blog/' %}
+    <a href="{{ SITEURL }}/{{ blog_root }}" class="btn btn-outline-secondary btn-sm">{{ t.back_to_posts }}</a>
 </div>
 {% endblock %}
