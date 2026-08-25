@@ -94,5 +94,63 @@ PAGE_EXCLUDES = ['extra']
 import json as _json
 JINJA_FILTERS = {"tojson": _json.dumps}
 
+# --- Markdown mirrors (Stripe-style /docs/foo.md) --------------------------
+# Alongside every rendered blog/{slug}/index.html, write a plain
+# blog/{slug}.md containing the article's raw Markdown body. This gives
+# LLMs/scrapers/"copy as markdown" buttons a clean source to fetch instead
+# of having to parse the HTML page.
+import os as _os
+import re as _re
+
+_METADATA_LINE_RE = _re.compile(r'^[A-Za-z][\w ]*:\s')
+
+
+def _strip_pelican_metadata(raw_text):
+    """Return the article body, with the leading `Key: value` metadata
+    block (Title/Date/Author/...) that Pelican reads off the top of a
+    Markdown source file removed."""
+    lines = raw_text.splitlines()
+    body_start = 0
+    for idx, line in enumerate(lines):
+        if not line.strip():
+            body_start = idx + 1
+            break
+        if not _METADATA_LINE_RE.match(line):
+            # Doesn't look like a metadata block at all - keep everything.
+            body_start = 0
+            break
+    else:
+        body_start = len(lines)
+    return "\n".join(lines[body_start:]).strip() + "\n"
+
+
+def _write_markdown_mirrors(article_generator):
+    site_url = article_generator.settings.get('SITEURL', '') or ''
+    for article in article_generator.articles:
+        source_path = getattr(article, 'source_path', None)
+        if not source_path or not _os.path.exists(source_path):
+            continue
+
+        with open(source_path, encoding='utf-8') as f:
+            body = _strip_pelican_metadata(f.read())
+
+        canonical = f"{site_url}/{article.url}" if site_url else f"/{article.url}"
+        header = (
+            f"# {article.title}\n\n"
+            f"> Source: {canonical}\n"
+            f"> Published: {article.date:%Y-%m-%d}\n\n"
+        )
+
+        # blog/{slug}/index.html -> blog/{slug}.md
+        md_relpath = _os.path.dirname(article.save_as) + '.md'
+        md_path = _os.path.join(article_generator.output_path, md_relpath)
+        _os.makedirs(_os.path.dirname(md_path), exist_ok=True)
+        with open(md_path, 'w', encoding='utf-8') as f:
+            f.write(header + body)
+
+
+from pelican import signals as _signals
+_signals.article_generator_finalized.connect(_write_markdown_mirrors)
+
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True

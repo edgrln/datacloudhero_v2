@@ -1,0 +1,24 @@
+{# Row of "for AI/LLM tools" actions for an article: copy/view the page as
+   plain Markdown, or open it in one of the big chat assistants with a
+   prompt pre-filled. Expects `article` in context. #}
+{% set article_md_url = SITEURL + '/' + article.url|trim('/') + '.md' %}
+{% set article_url = SITEURL + '/' + article.url %}
+{% set ai_prompt = 'Read and summarize this article: ' + article_md_url %}
+<div class="dropdown ai-actions mb-4">
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+            id="aiActionsBtn-{{ article.slug }}" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="js-ai-actions-label">Copy page</span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="aiActionsBtn-{{ article.slug }}">
+        <li>
+            <button class="dropdown-item js-copy-markdown" type="button" data-md-url="{{ article_md_url }}">
+                Copy page as Markdown
+            </button>
+        </li>
+        <li><a class="dropdown-item" href="{{ article_md_url }}" target="_blank" rel="noopener">View as Markdown</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="https://chatgpt.com/?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in ChatGPT</a></li>
+        <li><a class="dropdown-item" href="https://claude.ai/new?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in Claude</a></li>
+        <li><a class="dropdown-item" href="https://www.perplexity.ai/search?q={{ ai_prompt|urlencode }}" target="_blank" rel="noopener">Open in Perplexity</a></li>
+    </ul>
+</div>

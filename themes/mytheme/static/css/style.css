@@ -66,6 +66,17 @@ h1, h2, h3 {
     line-height: 1.75;
 }
 
+/* ---------- AI actions (copy/summarize as Markdown) ---------- */
+.ai-actions .btn {
+    font-size: 0.8125rem;
+}
+
+.ai-actions .js-ai-actions-label {
+    min-width: 6.5em;
+    display: inline-block;
+    text-align: left;
+}
+
 .article-body img {
     max-width: 100%;
     height: auto;

@@ -225,6 +225,32 @@
             html.setAttribute('data-bs-theme', next);
             localStorage.setItem('theme', next);
         });
+
+        // "Copy page as Markdown" buttons (see partials/ai_actions.html).
+        document.addEventListener('click', function (event) {
+            var btn = event.target.closest('.js-copy-markdown');
+            if (!btn) return;
+
+            var label = btn.closest('.ai-actions').querySelector('.js-ai-actions-label');
+            var resetLabel = label ? label.textContent : null;
+
+            fetch(btn.dataset.mdUrl)
+                .then(function (r) {
+                    if (!r.ok) throw new Error('Fetch failed: ' + r.status);
+                    return r.text();
+                })
+                .then(function (text) { return navigator.clipboard.writeText(text); })
+                .then(function () {
+                    if (label) label.textContent = 'Copied!';
+                })
+                .catch(function (err) {
+                    console.error('Copy as Markdown failed', err);
+                    if (label) label.textContent = 'Copy failed';
+                })
+                .finally(function () {
+                    if (label) setTimeout(function () { label.textContent = resetLabel; }, 1800);
+                });
+        });
     </script>
 </body>
 </html>
