@@ -456,3 +456,45 @@ h1, h2, h3 {
     color: var(--bs-emphasis-color);
     text-decoration: underline;
 }
+
+/* ---------- Language switch ---------- */
+.lang-switch .dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--bs-border-color);
+    background: transparent;
+    color: var(--bs-secondary-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.lang-switch .dropdown-toggle:hover,
+.lang-switch .dropdown-toggle:focus,
+.lang-switch .dropdown-toggle:active,
+.lang-switch .dropdown-toggle.show {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: transparent;
+}
+
+.lang-switch .dropdown-menu {
+    min-width: 9rem;
+    padding: 0.35rem;
+    border-radius: 0.75rem;
+}
+
+.lang-switch .dropdown-item {
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.lang-switch .dropdown-item:hover,
+.lang-switch .dropdown-item:focus,
+.lang-switch .dropdown-item.active {
+    background: var(--accent);
+    color: #fff;
+}
