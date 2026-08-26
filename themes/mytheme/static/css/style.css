@@ -476,7 +476,6 @@ h1, h2, h3 {
 .lang-switch .dropdown-toggle:active,
 .lang-switch .dropdown-toggle.show {
     color: var(--accent);
-    border-color: var(--accent);
     background: transparent;
 }
 
@@ -493,8 +492,13 @@ h1, h2, h3 {
 }
 
 .lang-switch .dropdown-item:hover,
-.lang-switch .dropdown-item:focus,
+.lang-switch .dropdown-item:focus {
+    background: transparent;
+    color: var(--accent);
+}
+
 .lang-switch .dropdown-item.active {
-    background: var(--accent);
-    color: #fff;
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
 }
