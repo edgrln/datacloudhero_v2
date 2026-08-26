@@ -89,6 +89,7 @@ UI_STRINGS = {
         'copy_failed': 'Copy failed',
         'ready_to_start': 'Ready to start?',
         'cookie_settings': 'Cookie settings',
+        'cookie_policy': 'Cookie Policy',
     },
     'fr': {
         'blog_nav': 'Blog',
@@ -112,6 +113,7 @@ UI_STRINGS = {
         'copy_failed': 'Échec de la copie',
         'ready_to_start': 'Prêt à commencer ?',
         'cookie_settings': 'Préférences cookies',
+        'cookie_policy': 'Politique de cookies',
     },
     'de': {
         'blog_nav': 'Blog',
@@ -135,6 +137,7 @@ UI_STRINGS = {
         'copy_failed': 'Kopieren fehlgeschlagen',
         'ready_to_start': 'Bereit loszulegen?',
         'cookie_settings': 'Cookie-Einstellungen',
+        'cookie_policy': 'Cookie-Richtlinie',
     },
     'es': {
         'blog_nav': 'Blog',
@@ -158,6 +161,7 @@ UI_STRINGS = {
         'copy_failed': 'Error al copiar',
         'ready_to_start': '¿Listo para empezar?',
         'cookie_settings': 'Preferencias de cookies',
+        'cookie_policy': 'Política de cookies',
     },
 }
 
@@ -199,13 +203,13 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-# Blogroll. "Cookie settings" used to live here as a dead "#" link - it's
-# now a real button (data-cc="show-preferencesModal", reopens the
-# cookieconsent preferences modal) hardcoded in base.html's footer instead,
-# since it needs to trigger JS, not navigate anywhere.
-LINKS = [
-    ("Cookie Policy", "#"),
-]
+# Blogroll. Both "Cookie Policy" and "Cookie settings" used to live here as
+# dead "#" links - they're now hardcoded directly in base.html's footer
+# instead: "Cookie Policy" links to the real content/pages/cookie-policy.md
+# page (needs {{ SITEURL }}, which a plain LINKS entry can't carry per
+# dev/prod build), and "Cookie settings" is a data-cc="show-preferencesModal"
+# button (needs to trigger JS, not navigate anywhere).
+LINKS = []
 
 # Social widget
 SOCIAL = [

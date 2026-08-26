@@ -56,7 +56,7 @@ CookieConsent.run({
                     acceptAllBtn: 'Accept all',
                     acceptNecessaryBtn: 'Reject all',
                     showPreferencesBtn: 'Manage preferences',
-                    footer: '<a href="#">Privacy Policy</a>',
+                    footer: '<a href="https://datacloudhero.com/blog/cookie-policy/">Cookie Policy</a>',
                 },
                 preferencesModal: {
                     title: 'Cookie preferences',
@@ -85,7 +85,7 @@ CookieConsent.run({
                     acceptAllBtn: 'Tout accepter',
                     acceptNecessaryBtn: 'Tout refuser',
                     showPreferencesBtn: 'Gérer mes préférences',
-                    footer: '<a href="#">Politique de confidentialité</a>',
+                    footer: '<a href="https://datacloudhero.com/blog/cookie-policy/">Politique de cookies</a>',
                 },
                 preferencesModal: {
                     title: 'Préférences des cookies',
@@ -114,7 +114,7 @@ CookieConsent.run({
                     acceptAllBtn: 'Alle akzeptieren',
                     acceptNecessaryBtn: 'Alle ablehnen',
                     showPreferencesBtn: 'Einstellungen verwalten',
-                    footer: '<a href="#">Datenschutzerklärung</a>',
+                    footer: '<a href="https://datacloudhero.com/blog/cookie-policy/">Cookie-Richtlinie</a>',
                 },
                 preferencesModal: {
                     title: 'Cookie-Einstellungen',
@@ -143,7 +143,7 @@ CookieConsent.run({
                     acceptAllBtn: 'Aceptar todo',
                     acceptNecessaryBtn: 'Rechazar todo',
                     showPreferencesBtn: 'Gestionar preferencias',
-                    footer: '<a href="#">Política de privacidad</a>',
+                    footer: '<a href="https://datacloudhero.com/blog/cookie-policy/">Política de cookies</a>',
                 },
                 preferencesModal: {
                     title: 'Preferencias de cookies',
