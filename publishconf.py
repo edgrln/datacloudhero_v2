@@ -11,6 +11,8 @@ from pelicanconf import *
 SITEURL = "https://datacloudhero.com"
 RELATIVE_URLS = False
 
+GTM_ID = 'GTM-MKSVW4QD'
+
 FEED_ALL_ATOM = "feeds/all.atom.xml"
 CATEGORY_FEED_ATOM = "feeds/{slug}.atom.xml"
 

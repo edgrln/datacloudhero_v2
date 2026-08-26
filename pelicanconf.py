@@ -5,6 +5,13 @@ SITEURL = ""
 # machine-readable summaries of the site.
 SITE_DESCRIPTION = "Practical guides and tutorials on data & AI engineering."
 
+# Google Tag Manager container ID. Empty here (dev) on purpose - set for
+# real in publishconf.py only, so `make devserver`/local testing doesn't
+# report hits into GTM. Read directly as {{ GTM_ID }} in base.html/
+# landing.html (no JINJA_GLOBALS needed - Pelican exposes all settings to
+# templates automatically).
+GTM_ID = ''
+
 PATH = "content"
 
 THEME = "themes/mytheme"
