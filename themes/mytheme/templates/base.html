@@ -170,7 +170,12 @@
                     {% for title, link in MENUITEMS %}
                     <li class="nav-item"><a class="nav-link" href="{{ link }}">{{ title }}</a></li>
                     {% endfor %}
-                    {% for page in pages if page.template != 'landing' %}
+                    {# Opt-in, not opt-out: a Page only shows here if it sets
+                       `Nav: true` in its metadata. Otherwise every Page
+                       (e.g. content/pages/cookie-policy.md) would show up
+                       in the primary nav by default - most aren't meant to
+                       (policy pages etc. are linked from the footer instead). #}
+                    {% for page in pages if page.metadata.get('nav') == 'true' %}
                     <li class="nav-item"><a class="nav-link" href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
