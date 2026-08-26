@@ -142,6 +142,28 @@
                     <li class="nav-item"><a class="nav-link" href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
+                {# Per-language target URL: on an article that has a translation
+                   in that language, link straight to it; otherwise fall back to
+                   that language's /blog/ root (tags/categories/archives aren't
+                   localized in v1, so there's no better target for those pages -
+                   see CLAUDE.md). #}
+                {% set lang_urls = {} %}
+                {% for lang_code in SITE_LANGUAGES %}
+                    {% set lang_blog_root = (lang_code + '/blog/') if lang_code != DEFAULT_LANG else 'blog/' %}
+                    {% if article is defined and lang_code == article.lang %}
+                        {% set _ = lang_urls.update({lang_code: SITEURL + '/' + article.url}) %}
+                    {% elif article is defined and (article.translations|selectattr('lang', 'equalto', lang_code)|list) %}
+                        {% set target = (article.translations|selectattr('lang', 'equalto', lang_code)|first) %}
+                        {% set _ = lang_urls.update({lang_code: SITEURL + '/' + target.url}) %}
+                    {% else %}
+                        {% set _ = lang_urls.update({lang_code: SITEURL + '/' + lang_blog_root}) %}
+                    {% endif %}
+                {% endfor %}
+                <div class="lang-switch d-flex align-items-center gap-2 mt-3 mt-lg-0 ms-lg-3">
+                    {% for lang_code, label in SITE_LANGUAGES.items() %}
+                    <a href="{{ lang_urls[lang_code] }}" class="lang-switch-link {% if lang_code == current_lang %}active{% endif %}">{{ label }}</a>
+                    {% endfor %}
+                </div>
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0 ms-lg-3">
                 <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Toggle color theme">
                     <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
