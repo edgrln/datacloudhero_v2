@@ -257,6 +257,16 @@ PAGE_SAVE_AS = 'blog/{slug}/index.html'
 # templates for the language switcher.
 ARTICLE_LANG_URL = '{lang}/blog/{slug}/'
 ARTICLE_LANG_SAVE_AS = '{lang}/blog/{slug}/index.html'
+# Same deal for a translated Page (e.g. content/pages/cookie-policy-fr.md,
+# Lang: fr, same Slug: as the English original) - Pelican's get_url_setting()
+# automatically looks for PAGE_LANG_URL/PAGE_LANG_SAVE_AS whenever
+# page.lang != DEFAULT_LANG, so this is enough to route translated Pages to
+# /{lang}/blog/{slug}/ without any per-file URL override. This does NOT
+# affect the landing page translations (landing-fr.html etc.), which set
+# their own <meta name="save_as"/"url"> per file - an explicit override
+# always wins over this fallback.
+PAGE_LANG_URL = '{lang}/blog/{slug}/'
+PAGE_LANG_SAVE_AS = '{lang}/blog/{slug}/index.html'
 AUTHOR_URL = 'blog/author/{slug}/'
 AUTHOR_SAVE_AS = 'blog/author/{slug}/index.html'
 CATEGORY_URL = 'blog/category/{slug}/'
