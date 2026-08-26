@@ -267,14 +267,21 @@ SEARCH_URL = "blog/search-index.json"
 # to read from - e.g. the raw-text blog/{slug}.md mirrors - so a root-level
 # copy is what lets those tabs pick up a favicon at all.
 #
-# extra/index.md is a short hand-written Markdown summary of the landing
-# page (it is NOT auto-derived from landing.html - that page is a big
-# Tailwind/Alpine.js file with no clean text source to extract from, e.g.
-# its FAQ copy only exists inside an Alpine `x-for` JS array). Keep it in
-# sync by hand when the pitch on the landing page changes materially.
-STATIC_PATHS = ['extra/index.md', 'extra/favicon.ico']
+# extra/index.md (+ its -fr/-de/-es siblings) are short hand-written
+# Markdown summaries of the landing page (NOT auto-derived from
+# landing.html/landing-{lang}.html - those pages are big Tailwind/Alpine.js
+# files with no clean text source to extract, e.g. the FAQ copy only exists
+# inside an Alpine `x-for` JS array). Keep each in sync by hand when the
+# pitch on the corresponding landing page changes materially.
+STATIC_PATHS = [
+    'extra/index.md', 'extra/index-fr.md', 'extra/index-de.md', 'extra/index-es.md',
+    'extra/favicon.ico',
+]
 EXTRA_PATH_METADATA = {
     'extra/index.md': {'path': 'index.md'},
+    'extra/index-fr.md': {'path': 'fr/index.md'},
+    'extra/index-de.md': {'path': 'de/index.md'},
+    'extra/index-es.md': {'path': 'es/index.md'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
 }
 # Keep the article/page generators from also trying to parse content/extra
@@ -363,34 +370,47 @@ def _plain_summary(article):
 
 def _write_llms_txt(article_generator):
     """Write an /llms.txt index (per the llmstxt.org convention) listing
-    every article and its Markdown mirror, so LLM tools can discover and
-    fetch the site's content without scraping HTML."""
+    every article/landing page and its Markdown mirror, so LLM tools can
+    discover and fetch the site's content without scraping HTML. Covers
+    every language in LANGUAGES: one Homepage entry per language under
+    "## Site" (content/extra/index-{lang}.md), and one "## Blog"-style
+    section per language (default-language articles under the plain
+    "## Blog", others under "## Blog ({LANG})")."""
     settings = article_generator.settings
     site_url = settings.get('SITEURL', '') or ''
     site_name = settings.get('SITENAME', '')
     description = settings.get('SITE_DESCRIPTION', '')
+    languages = settings.get('LANGUAGES', {'en': 'EN'})
+    default_lang = settings.get('DEFAULT_LANG', 'en').lower()
 
-    home_md_url = f"{site_url}/index.md" if site_url else "/index.md"
-    lines = [
-        f"# {site_name}",
-        "",
-        f"> {description}",
-        "",
-        "## Site",
-        "",
-        f"- [Homepage]({home_md_url}): Services, tech stack, process and contact.",
-        "",
-        "## Blog",
-        "",
-    ]
-    for article in article_generator.articles:  # newest first (see .dates)
-        md_relpath = _os.path.dirname(article.save_as) + '.md'
-        md_url = f"{site_url}/{md_relpath}" if site_url else f"/{md_relpath}"
-        desc = _plain_summary(article)
-        entry = f"- [{article.title}]({md_url})"
-        if desc:
-            entry += f": {desc}"
-        lines.append(entry)
+    def url_for(relpath):
+        return f"{site_url}/{relpath}" if site_url else f"/{relpath}"
+
+    lines = [f"# {site_name}", "", f"> {description}", "", "## Site", ""]
+    for lang_code, label in languages.items():
+        index_relpath = 'index.md' if lang_code == default_lang else f'{lang_code}/index.md'
+        lines.append(f"- [Homepage ({label})]({url_for(index_relpath)}): Services, tech stack, process and contact.")
+    lines.append("")
+
+    all_articles = list(article_generator.articles) + list(article_generator.translations)
+    for lang_code, label in languages.items():
+        lang_articles = sorted(
+            (a for a in all_articles if a.lang == lang_code),
+            key=lambda a: a.date,
+            reverse=True,
+        )
+        if not lang_articles:
+            continue
+        lines.append("## Blog" if lang_code == default_lang else f"## Blog ({label})")
+        lines.append("")
+        for article in lang_articles:
+            md_relpath = _os.path.dirname(article.save_as) + '.md'
+            desc = _plain_summary(article)
+            entry = f"- [{article.title}]({url_for(md_relpath)})"
+            if desc:
+                entry += f": {desc}"
+            lines.append(entry)
+        lines.append("")
 
     path = _os.path.join(article_generator.output_path, 'llms.txt')
     _os.makedirs(_os.path.dirname(path), exist_ok=True)
