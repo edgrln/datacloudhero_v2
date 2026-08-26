@@ -159,10 +159,16 @@
                         {% set _ = lang_urls.update({lang_code: SITEURL + '/' + lang_blog_root}) %}
                     {% endif %}
                 {% endfor %}
-                <div class="lang-switch d-flex align-items-center gap-2 mt-3 mt-lg-0 ms-lg-3">
-                    {% for lang_code, label in SITE_LANGUAGES.items() %}
-                    <a href="{{ lang_urls[lang_code] }}" class="lang-switch-link {% if lang_code == current_lang %}active{% endif %}">{{ label }}</a>
-                    {% endfor %}
+                <div class="dropdown lang-switch mt-3 mt-lg-0 ms-lg-3">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                            id="langSwitchBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ SITE_LANGUAGES[current_lang] }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langSwitchBtn">
+                        {% for lang_code, label in SITE_LANGUAGES.items() %}
+                        <li><a class="dropdown-item {% if lang_code == current_lang %}active{% endif %}" href="{{ lang_urls[lang_code] }}">{{ SITE_LANGUAGE_NAMES[lang_code] }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0 ms-lg-3">
                 <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Toggle color theme">

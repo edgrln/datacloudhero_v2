@@ -456,19 +456,3 @@ h1, h2, h3 {
     color: var(--bs-emphasis-color);
     text-decoration: underline;
 }
-
-/* ---------- Language switch ---------- */
-.lang-switch-link {
-    color: var(--bs-secondary-color);
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.lang-switch-link:hover {
-    color: var(--accent);
-}
-
-.lang-switch-link.active {
-    color: var(--accent);
-}

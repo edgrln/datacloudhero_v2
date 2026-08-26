@@ -33,15 +33,25 @@ TIMEZONE = 'Europe/Rome'
 
 DEFAULT_LANG = 'en'
 
-# Supported site languages: code -> display label for the language switcher.
-# Order here is the order links render in. Adding a language means: add it
-# here, add a UI_STRINGS['xx'] bundle below, and start writing content/{xx}/
-# articles + a content/pages/landing-{xx}.html.
+# Supported site languages: code -> short display label (used for the
+# current-language button in the nav dropdown). Order here is the order
+# languages render in. Adding a language means: add it here and to
+# LANGUAGE_NAMES, add a UI_STRINGS['xx'] bundle below, and start writing
+# content/{xx}/ articles + a content/pages/landing-{xx}.html.
 LANGUAGES = {
     'en': 'EN',
     'fr': 'FR',
     'de': 'DE',
     'es': 'ES',
+}
+
+# Native full names for the same languages, used inside the dropdown menu
+# itself (LANGUAGES is just the short code shown on the closed button).
+LANGUAGE_NAMES = {
+    'en': 'English',
+    'fr': 'Français',
+    'de': 'Deutsch',
+    'es': 'Español',
 }
 
 # Translations for template chrome (nav/footer/buttons/etc.) - NOT for
@@ -168,6 +178,7 @@ JINJA_GLOBALS = {
     'UI_STRINGS': UI_STRINGS,
     'CTA_STRINGS': CTA_STRINGS,
     'SITE_LANGUAGES': LANGUAGES,
+    'SITE_LANGUAGE_NAMES': LANGUAGE_NAMES,
 }
 
 # Feed generation is usually not desired when developing
