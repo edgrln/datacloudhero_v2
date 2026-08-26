@@ -31,10 +31,10 @@ AUTHORS_INFO = {
 }
 
 CTA_TITLE = "Let's build something great"
-CTA_TEXT = "Опишите вашу задачу — обсудим без лишних продаж, чисто по делу."
-CTA_BUTTON_TEXT = "Написать"
+CTA_TEXT = "Describe your challenge — we'll talk it through directly, no sales pitch."
+CTA_BUTTON_TEXT = "Get in touch"
 CTA_BUTTON_LINK = "mailto:info@datacloudhero.com"
-CTA_FOOTNOTE = "info@datacloudhero.com · Работаю удалённо"
+CTA_FOOTNOTE = "info@datacloudhero.com · Remote across Europe"
 
 TIMEZONE = 'Europe/Rome'
 
