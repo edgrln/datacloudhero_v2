@@ -39,6 +39,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ SITENAME }}{% endblock %}</title>
 
+    {# Social-share preview (og:image etc.): on an article page, use the
+       first <img> found in the article's own body (see `first_image` in
+       pelicanconf.py); otherwise - no image in that article, or this is a
+       non-article page (the /blog/ index, tags, categories, authors,
+       archives, a plain Page like Cookie Policy, 404, ...) - fall back to
+       the same social-card.png the landing page uses. Without this,
+       unfurlers (Telegram etc.) fell back to scraping whatever <img>
+       happened to be first in the page HTML, which was the author avatar
+       from partials/author_card.html. #}
+    {% set social_image = SITEURL + '/theme/img/social-card.png' %}
+    {% if article is defined %}
+        {% set og_type = 'article' %}
+        {% set page_title = article.title|striptags %}
+        {% set page_description = article.summary|striptags|truncate(200) %}
+        {% set page_image = article.content|first_image(SITEURL) or social_image %}
+        {% set canonical_url = SITEURL + '/' + article.url %}
+    {% elif page is defined %}
+        {% set og_type = 'website' %}
+        {% set page_title = page.title|striptags %}
+        {% set page_description = SITE_DESCRIPTION %}
+        {% set page_image = social_image %}
+        {% set canonical_url = SITEURL + '/' + page.url %}
+    {% else %}
+        {% set og_type = 'website' %}
+        {% set page_title = SITENAME %}
+        {% set page_description = SITE_DESCRIPTION %}
+        {% set page_image = social_image %}
+        {% set canonical_url = SITEURL + '/blog/' %}
+    {% endif %}
+    <meta name="description" content="{{ page_description }}">
+    <meta property="og:site_name" content="{{ SITENAME }}">
+    <meta property="og:type" content="{{ og_type }}">
+    <meta property="og:title" content="{{ page_title }}">
+    <meta property="og:description" content="{{ page_description }}">
+    <meta property="og:image" content="{{ page_image }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title }}">
+    <meta name="twitter:description" content="{{ page_description }}">
+    <meta name="twitter:image" content="{{ page_image }}">
+
     <script>
         (function () {
             var stored = localStorage.getItem('theme');
