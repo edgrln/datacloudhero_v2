@@ -2,6 +2,20 @@
 <html lang="en" data-theme="dark">
 <head>
   {% if GTM_ID %}
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      // Google Consent Mode v2 defaults: deny analytics/ads storage until
+      // the visitor accepts via the cookie banner (see
+      // theme/js/cookieconsent-config.js, which calls gtag('consent',
+      // 'update', ...) from CookieConsent's onFirstConsent/onChange).
+      gtag('consent', 'default', {
+          'ad_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied',
+          'analytics_storage': 'denied'
+      });
+  </script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -22,7 +36,7 @@
 
   <title>datacloudhero.com - Data & AI Engineering</title>
 
-  <link rel="stylesheet" href="/assets/vendor/cookieconsent/cookieconsent.css?v=4">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
 
   <style>
     :root,
@@ -526,6 +540,6 @@
     lucide.createIcons();
   </script>
 
-  <script type="module" src="/assets/js/cookieconsent-config.js?v=4"></script>
+  <script type="module" src="https://datacloudhero.com/theme/js/cookieconsent-config.js"></script>
 </body>
 </html>

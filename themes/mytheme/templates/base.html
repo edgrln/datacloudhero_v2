@@ -9,7 +9,24 @@
 <!DOCTYPE html>
 <html lang="{{ current_lang }}">
 <head>
+    <!-- Cookie consent (vanilla-cookieconsent) - loaded before GTM so
+         Google Consent Mode defaults are set before any tag can fire. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
     {% if GTM_ID %}
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        // Google Consent Mode v2 defaults: deny analytics/ads storage until
+        // the visitor actually accepts via the cookie banner (see
+        // theme/js/cookieconsent-config.js, which calls gtag('consent',
+        // 'update', ...) from CookieConsent's onFirstConsent/onChange).
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'analytics_storage': 'denied'
+        });
+    </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -260,6 +277,7 @@
                     {% for title, link in LINKS %}
                     <a href="{{ link }}" class="footer-link d-block">{{ title }}</a>
                     {% endfor %}
+                    <button type="button" data-cc="show-preferencesModal" class="footer-link d-block bg-transparent border-0 p-0" style="cursor: pointer;">{{ t.cookie_settings }}</button>
                 </div>
             </div>
             <hr class="my-4">
@@ -304,5 +322,6 @@
                 });
         });
     </script>
+    <script type="module" src="{{ SITEURL }}/theme/js/cookieconsent-config.js"></script>
 </body>
 </html>
