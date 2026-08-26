@@ -332,6 +332,36 @@ JINJA_FILTERS = {"tojson": _json.dumps}
 import os as _os
 import re as _re
 
+# --- og:image / twitter:image support ---------------------------------
+# base.html uses this to pick an article's social-share image: the first
+# <img> found in its rendered HTML body, falling back to the sitewide
+# social-card.png (same one the landing page uses) when an article has no
+# image, or on non-article pages (the /blog/ index, tags, categories, ...).
+# Without this, unfurlers (Telegram etc.) fell back to scraping whatever
+# <img> happens to appear first in the page HTML, which was the author's
+# avatar from partials/author_card.html.
+_IMG_SRC_RE = _re.compile(r'<img[^>]+src=["\']([^"\']+)["\']')
+
+
+def _first_image(html, site_url=''):
+    """Return the absolute URL of the first <img> in a rendered HTML
+    string, or None if there isn't one. A relative src is resolved
+    against site_url."""
+    if not html:
+        return None
+    match = _IMG_SRC_RE.search(html)
+    if not match:
+        return None
+    src = match.group(1)
+    if src.startswith(('http://', 'https://', 'data:')):
+        return src
+    if site_url:
+        return site_url.rstrip('/') + '/' + src.lstrip('/')
+    return src
+
+
+JINJA_FILTERS['first_image'] = _first_image
+
 _METADATA_LINE_RE = _re.compile(r'^[A-Za-z][\w ]*:\s')
 
 
