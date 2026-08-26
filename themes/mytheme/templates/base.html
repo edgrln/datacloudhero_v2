@@ -132,7 +132,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav">
                     {% set blog_root = (current_lang + '/blog/') if current_lang != DEFAULT_LANG else 'blog/' %}
                     <li class="nav-item"><a class="nav-link" href="{{ SITEURL }}/{{ blog_root }}">{{ t.blog_nav }}</a></li>
                     {% for title, link in MENUITEMS %}
@@ -159,7 +159,7 @@
                         {% set _ = lang_urls.update({lang_code: SITEURL + '/' + lang_blog_root}) %}
                     {% endif %}
                 {% endfor %}
-                <div class="dropdown lang-switch mt-3 mt-lg-0 ms-lg-3">
+                <div class="dropdown lang-switch mt-3 mt-lg-0 ms-lg-auto">
                     <button class="dropdown-toggle" type="button"
                             id="langSwitchBtn" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ SITE_LANGUAGES[current_lang] }}
