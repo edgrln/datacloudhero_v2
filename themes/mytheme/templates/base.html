@@ -220,11 +220,12 @@
                     <li class="nav-item"><a class="nav-link" href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
-                {# Per-language target URL: on an article that has a translation
-                   in that language, link straight to it; otherwise fall back to
-                   that language's /blog/ root (tags/categories/archives aren't
-                   localized in v1, so there's no better target for those pages -
-                   see CLAUDE.md). #}
+                {# Per-language target URL: on an article/page that has a
+                   translation in that language, link straight to it;
+                   otherwise fall back to that language's /blog/ root
+                   (tags/categories/archives aren't localized in v1, so
+                   there's no better target for those pages - see
+                   CLAUDE.md). #}
                 {% set lang_urls = {} %}
                 {% for lang_code in SITE_LANGUAGES %}
                     {% set lang_blog_root = (lang_code + '/blog/') if lang_code != DEFAULT_LANG else 'blog/' %}
@@ -232,6 +233,11 @@
                         {% set _ = lang_urls.update({lang_code: SITEURL + '/' + article.url}) %}
                     {% elif article is defined and (article.translations|selectattr('lang', 'equalto', lang_code)|list) %}
                         {% set target = (article.translations|selectattr('lang', 'equalto', lang_code)|first) %}
+                        {% set _ = lang_urls.update({lang_code: SITEURL + '/' + target.url}) %}
+                    {% elif page is defined and lang_code == page.lang %}
+                        {% set _ = lang_urls.update({lang_code: SITEURL + '/' + page.url}) %}
+                    {% elif page is defined and (page.translations|selectattr('lang', 'equalto', lang_code)|list) %}
+                        {% set target = (page.translations|selectattr('lang', 'equalto', lang_code)|first) %}
                         {% set _ = lang_urls.update({lang_code: SITEURL + '/' + target.url}) %}
                     {% else %}
                         {% set _ = lang_urls.update({lang_code: SITEURL + '/' + lang_blog_root}) %}
@@ -323,7 +329,8 @@
                     {% for title, link in LINKS %}
                     <a href="{{ link }}" class="footer-link d-block">{{ title }}</a>
                     {% endfor %}
-                    <a href="{{ SITEURL }}/blog/cookie-policy/" class="footer-link d-block">{{ t.cookie_policy }}</a>
+                    {% set footer_blog_root = (current_lang + '/blog/') if current_lang != DEFAULT_LANG else 'blog/' %}
+                    <a href="{{ SITEURL }}/{{ footer_blog_root }}cookie-policy/" class="footer-link d-block">{{ t.cookie_policy }}</a>
                     <button type="button" data-cc="show-preferencesModal" class="footer-link d-block bg-transparent border-0 p-0" style="cursor: pointer;">{{ t.cookie_settings }}</button>
                 </div>
             </div>
