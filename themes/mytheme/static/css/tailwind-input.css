@@ -228,7 +228,11 @@
     }
 
     /* ---------- Forms (replaces Bootstrap's .form-control/.form-label,
-       used only by partials/contact_modal.html) ---------- */
+       used only by partials/contact_modal.html) - padding/radius/font-size
+       match the landing page's own contact form inputs (content/pages/
+       landing*.html: px-4 py-3 text-sm rounded-2xl, textarea rounded-3xl)
+       so the two forms read as the same component, not just the same
+       color story. ---------- */
     .form-label {
         display: inline-block;
         margin-bottom: 0.5rem;
@@ -237,14 +241,18 @@
     .form-control {
         display: block;
         width: 100%;
-        padding: 0.65rem 1rem;
-        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
         line-height: 1.5;
         color: var(--color-body);
         background: var(--color-tertiary-bg);
         border: 1px solid var(--color-border);
-        border-radius: 0.75rem;
+        border-radius: 1rem;
         transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    textarea.form-control {
+        border-radius: 1.5rem;
     }
 
     .form-control:focus {
@@ -885,8 +893,15 @@
        light/dark toggle instead of the landing's fixed dark shell. */
     .contact-modal-card {
         background: var(--color-tertiary-bg);
-        border-radius: 1.5rem;
+        border-radius: 2rem;
         border: 1px solid var(--color-border);
+    }
+
+    /* Landing's own submit button is rounded-2xl (1rem), a step past the
+       site-wide .btn-lg default (0.5rem) - scoped to the modal only, so
+       other .btn-lg buttons elsewhere (e.g. the CTA trigger) are untouched. */
+    .contact-modal-card .btn-glow {
+        border-radius: 1rem;
     }
 
     /* Pulsing accent button, matching the landing page's .btn-glow (see
