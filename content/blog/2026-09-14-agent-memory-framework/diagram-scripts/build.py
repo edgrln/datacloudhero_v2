@@ -25,7 +25,7 @@ MEMORY_LABELS = {
 }
 
 def memory_svg(fact, event, rule):
-    mark = brand_mark(cx=550, cy=326, font_size=15, icon_h=17)
+    mark = brand_mark(cx=550, cy=326, height=17)
     return f'''<svg width="680" height="360" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -127,7 +127,7 @@ GOV_TEXT = {
 }
 
 def gov_svg(t):
-    mark = brand_mark(cx=510, cy=374, font_size=15, icon_h=17)
+    mark = brand_mark(cx=510, cy=374, height=17)
     return f'''<svg width="680" height="400" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
