@@ -38,6 +38,15 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         color: var(--color-body);
         background: var(--color-body-bg);
+        /* Without this, WebKit/Blink render text with subpixel
+           anti-aliasing tuned for dark-on-light - on a dark background
+           (light-on-dark) that makes text look heavier/fuzzier than it
+           should, which reads as "hard to read" even though the color
+           contrast itself is fine. Docusaurus (and most dark-mode-aware
+           sites) set exactly this. */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
     }
 
     /* Tailwind's preflight strips the browser's default link color -
@@ -421,6 +430,17 @@
     .article-body {
         font-size: 1.125rem;
         line-height: 1.75;
+    }
+
+    /* A bit more room between paragraphs than the sitewide default (1rem,
+       see the global `p` rule above) - long-form article prose reads more
+       comfortably with a clearer visual break between paragraphs than
+       between the lines within one (Docusaurus's own docs, for reference,
+       use ~1.25x their font-size; this matches that ratio for our own
+       1.125rem article font-size). */
+    .article-body p,
+    .content-wrap p {
+        margin-bottom: 1.5rem;
     }
 
     /* ---------- AI actions (copy/summarize as Markdown) ---------- */
