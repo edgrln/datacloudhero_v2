@@ -45,7 +45,12 @@
                 <textarea name="message" x-model="formData.message" required rows="5" class="form-control"></textarea>
             </div>
 
-            <div class="cf-turnstile mb-4" data-sitekey="0x4AAAAAAEM7muzBPUFiEYFd" data-theme="auto"></div>
+            {# data-language pins the widget to the page's own language -
+               without it Turnstile defaults to the visitor's browser/OS
+               locale, so an English article could show a Russian/German/
+               whatever captcha depending on the visitor's own settings,
+               regardless of what language they're actually reading. #}
+            <div class="cf-turnstile mb-4" data-sitekey="0x4AAAAAAEM7muzBPUFiEYFd" data-theme="auto" data-language="{{ current_lang }}"></div>
 
             <button type="submit" :disabled="submitting" class="btn btn-glow btn-lg w-full">
                 <span x-show="!submitting">{{ t.contact_send }}</span>
