@@ -16,15 +16,15 @@
    string literals, which would otherwise terminate a double-quoted HTML
    attribute at the first embedded quote and truncate the Alpine
    expression mid-call. #}
-<div class="cta-box my-5 p-4 p-md-5 text-center"
+<div class="cta-box my-12 p-6 min-[768px]:p-12 text-center"
      x-data='contactForm({{ t.contact_success|tojson }}, {{ t.contact_error|tojson }})'>
-    <p class="text-uppercase small fw-semibold text-muted mb-2">{{ t.ready_to_start }}</p>
-    <h2 class="mb-3">{{ cta_title }}</h2>
-    {% if cta_text %}<p class="text-muted mb-4 mx-auto cta-text">{{ cta_text }}</p>{% endif %}
+    <p class="uppercase text-sm font-semibold text-muted mb-2">{{ t.ready_to_start }}</p>
+    <h2 class="mb-4">{{ cta_title }}</h2>
+    {% if cta_text %}<p class="text-muted mb-6 mx-auto cta-text">{{ cta_text }}</p>{% endif %}
     {% if cta_button_text %}
-    <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-dark btn-lg px-4">{{ cta_button_text }}</button>
+    <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-dark btn-lg px-6">{{ cta_button_text }}</button>
     {% endif %}
-    {% if cta_footnote %}<p class="text-muted small mt-3 mb-0">{{ cta_footnote }}</p>{% endif %}
+    {% if cta_footnote %}<p class="text-muted text-sm mt-4 mb-0">{{ cta_footnote }}</p>{% endif %}
 
     {% include "partials/contact_modal.html" %}
 </div>

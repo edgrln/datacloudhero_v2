@@ -1,18 +1,18 @@
 {% extends "blog_base.html" %}
 
 {% block blog_content %}
-<h1 class="mb-4">{{ t.latest_posts }}</h1>
+<h1 class="mb-6">{{ t.latest_posts }}</h1>
 
 {% set next_url = (SITEURL ~ '/' ~ articles_next_page.url) if articles_page.has_next() else '' %}
 <div x-data="infiniteScroll('{{ next_url }}')" x-init="init()">
     <div id="post-list" x-ref="postList">
         {% for article in articles_page.object_list %}
-        <article class="mb-5 pb-4 border-bottom">
-            <h2><a class="text-decoration-none article-title-link" href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
-            <p class="text-muted small">{{ article.locale_date }}</p>
+        <article class="mb-12 pb-6 border-b border-[--color-border]">
+            <h2><a class="no-underline article-title-link" href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
+            <p class="text-muted text-sm">{{ article.locale_date }}</p>
 
             {% if article.authors %}
-                <div class="d-flex flex-wrap gap-4 mb-3">
+                <div class="flex flex-wrap gap-6 mb-4">
                 {% for a in article.authors %}
                     {% set author_name = a %}
                     {% include "partials/author_card.html" with context %}
@@ -23,38 +23,38 @@
                 {% include "partials/author_card.html" with context %}
             {% endif %}
 
-            <p class="mt-3">{{ article.summary }}</p>
+            <p class="mt-4">{{ article.summary }}</p>
 
             {% if article.tags %}
-            <div class="mb-3 d-flex flex-wrap align-items-center gap-1">
-                <strong class="me-2">{{ t.tags }}</strong>
+            <div class="mb-4 flex flex-wrap items-center gap-1">
+                <strong class="mr-2">{{ t.tags }}</strong>
                 {% for tag in article.tags %}
                 <a href="{{ SITEURL }}/{{ tag.url }}" class="tag-pill">{{ tag }}</a>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline-primary btn-sm">{{ t.read_more }}</a>
+            <a href="{{ SITEURL }}/{{ article.url }}" class="btn btn-outline btn-sm">{{ t.read_more }}</a>
         </article>
         {% endfor %}
     </div>
 
-    <div id="pagination-data" data-next-url="{{ next_url }}" class="d-none"></div>
+    <div id="pagination-data" data-next-url="{{ next_url }}" class="hidden"></div>
 
-    <div x-show="loading" x-cloak class="text-center text-muted py-4">{{ t.loading_more }}</div>
+    <div x-show="loading" x-cloak class="text-center text-muted py-6">{{ t.loading_more }}</div>
     <div x-ref="sentinel"></div>
 
     <noscript>
         {% if articles_page.has_other_pages() %}
         <nav aria-label="Page navigation">
-            <ul class="pagination">
+            <div class="flex gap-2">
                 {% if articles_page.has_previous() %}
-                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_previous_page.url }}">{{ t.previous }}</a></li>
+                <a class="btn btn-outline btn-sm" href="{{ SITEURL }}/{{ articles_previous_page.url }}">{{ t.previous }}</a>
                 {% endif %}
                 {% if articles_page.has_next() %}
-                <li class="page-item"><a class="page-link" href="{{ SITEURL }}/{{ articles_next_page.url }}">{{ t.next }}</a></li>
+                <a class="btn btn-outline btn-sm" href="{{ SITEURL }}/{{ articles_next_page.url }}">{{ t.next }}</a>
                 {% endif %}
-            </ul>
+            </div>
         </nav>
         {% endif %}
     </noscript>
