@@ -15,6 +15,37 @@ GTM_ID = ''
 PATH = "content"
 
 THEME = "themes/mytheme"
+
+# Cache-busting for the theme's two stylesheets (style.css is a Tailwind
+# build output, see "Commands" above; pygments.css is hand-edited but
+# served with the same headers). The site is proxied through Cloudflare,
+# which caches static assets at the edge for hours (observed: max-age=14400)
+# independent of whether the underlying file actually changed - since both
+# files are always requested at the same URL, a CSS-only deploy could stay
+# invisible to already-cached visitors for up to 4 hours otherwise. Appending
+# a content hash as a query string (?v=<hash>) gives every changed build its
+# own cache key while unchanged files keep their existing cache; computed
+# fresh on every Pelican run (always after `npm run build:css`, per the
+# Makefile's `css` dependency), so it can't drift out of sync with the file
+# actually being served. Read directly as {{ ASSET_HASH['style.css'] }} in
+# base.html (no JINJA_GLOBALS needed - see GTM_ID above).
+import hashlib as _hashlib
+import os as _os_for_hash
+
+
+def _css_asset_hash(filename):
+    path = _os_for_hash.path.join(THEME, 'static', 'css', filename)
+    try:
+        with open(path, 'rb') as f:
+            return _hashlib.sha256(f.read()).hexdigest()[:10]
+    except FileNotFoundError:
+        return ''
+
+
+ASSET_HASH = {
+    'style.css': _css_asset_hash('style.css'),
+    'pygments.css': _css_asset_hash('pygments.css'),
+}
 AUTHORS_INFO = {
     'Edgar L': {
         'avatar': 'https://avatars.githubusercontent.com/u/78014277?v=4',

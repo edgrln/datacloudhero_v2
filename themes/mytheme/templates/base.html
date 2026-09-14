@@ -186,8 +186,10 @@
     <script defer src="{{ SITEURL }}/theme/js/contact-form.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <link href="{{ SITEURL }}/theme/css/style.css" rel="stylesheet">
-    <link href="{{ SITEURL }}/theme/css/pygments.css" rel="stylesheet">
+    {# ?v=<content hash> busts Cloudflare's edge cache on every actual CSS
+       change - see ASSET_HASH in pelicanconf.py. #}
+    <link href="{{ SITEURL }}/theme/css/style.css?v={{ ASSET_HASH['style.css'] }}" rel="stylesheet">
+    <link href="{{ SITEURL }}/theme/css/pygments.css?v={{ ASSET_HASH['pygments.css'] }}" rel="stylesheet">
     <link rel="icon" href="{{ SITEURL }}/theme/img/favicon.ico">
 
     {% if FEED_ALL_ATOM %}
