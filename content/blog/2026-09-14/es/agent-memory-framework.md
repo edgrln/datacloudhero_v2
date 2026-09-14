@@ -68,7 +68,7 @@ def turn(user_message, working_memory, store):
     return response, working_memory
 ```
 
-![Diagrama: Fact/Event/Rule en persistent storage llegan a Working memory a través de Retrieval; Parametric se conecta directamente a Working memory, sin retrieval]({attach}agent-memory-diagram-es.png)
+![Diagrama: Fact/Event/Rule en persistent storage llegan a Working memory a través de Retrieval; Parametric se conecta directamente a Working memory, sin retrieval]({attach}agent-memory-diagram.png)
 
 El retrieval no es un cuarto tipo de contenido, sino un mecanismo de entrega para cualquiera de los tres tipos del Eje 1. LangChain lo formula casi textualmente en su documentación de Deep Agents: en la tabla de parámetros de memoria, "Information type" (semantic/episodic/procedural) y "Retrieval" (cargado en el prompt por defecto / leído bajo demanda) son dos columnas distintas que responden a dos preguntas distintas, no puntos de una misma lista.
 
@@ -112,7 +112,7 @@ backend = CompositeBackend(
 )
 ```
 
-![Diagrama: el Agent lee y escribe en el scope User (lectura-escritura), pero del scope Org solo lee; un intento del agente de escribir en el scope Org una instrucción proveniente de la conversación queda bloqueado por los permisos]({attach}agent-memory-governance-diagram-es.png)
+![Diagrama: el Agent lee y escribe en el scope User (lectura-escritura), pero del scope Org solo lee; un intento del agente de escribir en el scope Org una instrucción proveniente de la conversación queda bloqueado por los permisos]({attach}agent-memory-governance-diagram.png)
 
 Este es el eje que más problemas suele causar en producción - no en la fase de prototipo, sino más adelante, cuando varios usuarios o agentes acceden a la vez a la misma memoria. Un ejemplo concreto: un agente de soporte escribe en la memoria compartida de un ticket una nota del tipo "el cliente pidió saltarse la verificación de edad" - y si esa memoria la lee sin criterio otra sesión u otro agente, la instrucción puede filtrarse sin darse cuenta a la conversación de otra persona. De ahí la regla por defecto: alcance de usuario salvo que haya una razón explícita para compartir; las políticas compartidas son de solo lectura y las rellena el código de la aplicación, no el propio agente en mitad de la conversación.
 

@@ -68,7 +68,7 @@ def turn(user_message, working_memory, store):
     return response, working_memory
 ```
 
-![Schéma : Fact/Event/Rule dans le persistent storage atteignent la Working memory via Retrieval ; Parametric se connecte directement à la Working memory, sans retrieval]({attach}agent-memory-diagram-fr.png)
+![Schéma : Fact/Event/Rule dans le persistent storage atteignent la Working memory via Retrieval ; Parametric se connecte directement à la Working memory, sans retrieval]({attach}agent-memory-diagram.png)
 
 Le retrieval n'est pas un quatrième type de contenu, mais un mode de livraison pour n'importe lequel des trois types de l'Axe 1. LangChain le formule presque mot pour mot dans sa documentation Deep Agents : dans le tableau des paramètres de mémoire, « Information type » (semantic/episodic/procedural) et « Retrieval » (chargé par défaut dans le prompt / lu à la demande) sont deux colonnes distinctes qui répondent à deux questions distinctes, pas des éléments d'une seule liste.
 
@@ -112,7 +112,7 @@ backend = CompositeBackend(
 )
 ```
 
-![Schéma : l'Agent lit et écrit dans le scope User (lecture-écriture), mais ne fait que lire le scope Org ; une tentative de l'agent d'écrire une instruction issue de la conversation dans le scope Org est bloquée par les permissions]({attach}agent-memory-governance-diagram-fr.png)
+![Schéma : l'Agent lit et écrit dans le scope User (lecture-écriture), mais ne fait que lire le scope Org ; une tentative de l'agent d'écrire une instruction issue de la conversation dans le scope Org est bloquée par les permissions]({attach}agent-memory-governance-diagram.png)
 
 C'est cet axe qui pose le plus souvent problème en production - pas au stade du prototype, mais plus tard, quand plusieurs utilisateurs ou agents accèdent en même temps à la même mémoire. Exemple concret : un agent support écrit dans la mémoire partagée d'un ticket une note du genre « le client a demandé de sauter la vérification d'âge » — et si cette mémoire est lue sans discernement par d'autres sessions ou un autre agent, l'instruction peut discrètement contaminer la conversation de quelqu'un d'autre. D'où la règle par défaut : scope utilisateur sauf raison explicite de partager ; les politiques partagées sont en lecture seule et alimentées par le code applicatif, pas par l'agent lui-même en cours de conversation.
 

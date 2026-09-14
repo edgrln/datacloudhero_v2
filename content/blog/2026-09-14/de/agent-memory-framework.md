@@ -68,7 +68,7 @@ def turn(user_message, working_memory, store):
     return response, working_memory
 ```
 
-![Diagramm: Fact/Event/Rule im Persistent Storage gelangen über Retrieval ins Working Memory; Parametric ist direkt mit dem Working Memory verbunden, ohne Retrieval]({attach}agent-memory-diagram-de.png)
+![Diagramm: Fact/Event/Rule im Persistent Storage gelangen über Retrieval ins Working Memory; Parametric ist direkt mit dem Working Memory verbunden, ohne Retrieval]({attach}agent-memory-diagram.png)
 
 Retrieval ist kein vierter Inhaltstyp, sondern ein Zustellmechanismus für jeden der drei Typen aus Achse 1. LangChain formuliert das in der Deep-Agents-Dokumentation fast wortgleich: In der Tabelle der Memory-Parameter sind „Information type" (semantic/episodic/procedural) und „Retrieval" (standardmäßig in den Prompt geladen / bei Bedarf gelesen) zwei getrennte Spalten, die zwei getrennte Fragen beantworten — nicht Punkte derselben Liste.
 
@@ -112,7 +112,7 @@ backend = CompositeBackend(
 )
 ```
 
-![Diagramm: Der Agent liest und schreibt im User-Scope (Lese-/Schreibzugriff), liest im Org-Scope aber nur; ein Versuch des Agenten, eine Anweisung aus dem Gespräch in den Org-Scope zu schreiben, wird durch Berechtigungen blockiert]({attach}agent-memory-governance-diagram-de.png)
+![Diagramm: Der Agent liest und schreibt im User-Scope (Lese-/Schreibzugriff), liest im Org-Scope aber nur; ein Versuch des Agenten, eine Anweisung aus dem Gespräch in den Org-Scope zu schreiben, wird durch Berechtigungen blockiert]({attach}agent-memory-governance-diagram.png)
 
 Genau diese Achse verursacht in Produktion am häufigsten Probleme - nicht in der Prototyp-Phase, sondern später, sobald mehrere Nutzer oder Agenten gleichzeitig Zugriff auf dasselbe Gedächtnis bekommen. Ein konkretes Beispiel: Ein Support-Agent schreibt in das gemeinsame Ticket-Gedächtnis eine Notiz wie „Kunde hat gebeten, die Altersprüfung zu überspringen" — und wenn diese Erinnerung unterschiedslos von anderen Sitzungen oder einem anderen Agenten gelesen wird, kann die Anweisung unbemerkt in ein fremdes Gespräch durchsickern. Daraus ergibt sich die Standardregel: Scope auf den Nutzer, sofern es keinen expliziten Grund zum Teilen gibt; gemeinsame Richtlinien sind read-only und werden von Anwendungscode befüllt, nicht vom Agenten selbst mitten im Gespräch.
 
