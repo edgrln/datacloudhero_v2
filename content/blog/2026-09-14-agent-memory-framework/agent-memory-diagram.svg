@@ -1,0 +1,64 @@
+<svg width="680" height="360" viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect width="680" height="360" fill="#ffffff"/>
+
+  <!-- Persistent storage container -->
+  <rect x="40" y="50" width="220" height="270" rx="20" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="150" y="76" text-anchor="middle" font-size="14" font-weight="600" fill="#2C2C2A">Persistent storage</text>
+
+  <!-- Fact -->
+  <rect x="60" y="90" width="180" height="58" rx="10" fill="#9FE1CB" stroke="#0F6E56" stroke-width="1"/>
+  <text x="150" y="115" text-anchor="middle" font-size="14" font-weight="600" fill="#04342C">Факт</text>
+  <text x="150" y="134" text-anchor="middle" font-size="12" fill="#0F6E56">semantic</text>
+
+  <!-- Event -->
+  <rect x="60" y="162" width="180" height="58" rx="10" fill="#F5C4B3" stroke="#993C1D" stroke-width="1"/>
+  <text x="150" y="187" text-anchor="middle" font-size="14" font-weight="600" fill="#4A1B0C">Событие</text>
+  <text x="150" y="206" text-anchor="middle" font-size="12" fill="#993C1D">episodic</text>
+
+  <!-- Rule -->
+  <rect x="60" y="234" width="180" height="58" rx="10" fill="#F4C0D1" stroke="#993556" stroke-width="1"/>
+  <text x="150" y="259" text-anchor="middle" font-size="14" font-weight="600" fill="#4B1528">Правило</text>
+  <text x="150" y="278" text-anchor="middle" font-size="12" fill="#993556">procedural</text>
+
+  <!-- Arrow: storage -> retrieval -->
+  <line x1="260" y1="185" x2="296" y2="185" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Retrieval -->
+  <rect x="300" y="155" width="140" height="60" rx="10" fill="#B5D4F4" stroke="#185FA5" stroke-width="1"/>
+  <text x="370" y="181" text-anchor="middle" font-size="14" font-weight="600" fill="#042C53">Retrieval</text>
+  <text x="370" y="199" text-anchor="middle" font-size="12" fill="#185FA5">fetch on demand</text>
+
+  <!-- Arrow: retrieval -> working memory -->
+  <line x1="440" y1="185" x2="476" y2="185" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Working memory -->
+  <rect x="480" y="155" width="140" height="60" rx="10" fill="#C0DD97" stroke="#3B6D11" stroke-width="1"/>
+  <text x="550" y="181" text-anchor="middle" font-size="14" font-weight="600" fill="#173404">Working memory</text>
+  <text x="550" y="199" text-anchor="middle" font-size="12" fill="#3B6D11">current context</text>
+
+  <!-- Dashed arrow: parametric -> working memory -->
+  <line x1="550" y1="250" x2="550" y2="219" stroke="#5F5E5A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+
+  <!-- Parametric -->
+  <rect x="480" y="250" width="140" height="54" rx="10" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="550" y="273" text-anchor="middle" font-size="14" font-weight="600" fill="#2C2C2A">Parametric</text>
+  <text x="550" y="291" text-anchor="middle" font-size="12" fill="#5F5E5A">model weights</text>
+
+  <!-- Lakedsoft credit mark (brand mark + wordmark, see themes/mytheme/static/brand/lakedsoft-logo.svg) -->
+  <g transform="translate(514,314) scale(0.5)" opacity="0.55">
+    <g transform="translate(3 3)">
+      <circle cx="29" cy="29" r="28" stroke="#b68235" stroke-width="1.25" fill="none"/>
+      <path d="M6 34 h46" stroke="#b68235" stroke-width="1.25"/>
+      <path d="M9 40 h12 M25 40 h9 M38 40 h11" stroke="#b68235" stroke-width="1.25" stroke-opacity="0.55"/>
+      <path d="M18 34 l11 -17 l11 17" stroke="#201f1d" stroke-width="1.25" fill="none"/>
+    </g>
+    <text x="82" y="36" font-family="Cormorant Garamond, Garamond, serif" font-size="40" fill="#201f1d">Lakedsoft</text>
+    <text x="83" y="52" font-family="Lora, Georgia, serif" font-size="9" letter-spacing="2.7" fill="#57544e">SYSTEMS &amp; SOFTWARE</text>
+  </g>
+</svg>
