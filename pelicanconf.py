@@ -250,8 +250,9 @@ ARTICLE_SAVE_AS = 'blog/{slug}/index.html'
 PAGE_URL = 'blog/{slug}/'
 PAGE_SAVE_AS = 'blog/{slug}/index.html'
 # Non-default-language articles (Lang: fr/de/es + a Slug: matching their
-# English original - see content/fr/, content/de/, content/es/) get a
-# /{lang}/ prefix instead of living at the same /blog/{slug}/ URL. Pelican
+# English original - see content/blog/fr/, content/blog/de/,
+# content/blog/es/) get a /{lang}/ prefix instead of living at the same
+# /blog/{slug}/ URL. Pelican
 # links same-slug articles across languages automatically via
 # ARTICLE_TRANSLATION_ID (default: 'slug') - see article.translations in
 # templates for the language switcher.
