@@ -517,8 +517,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
         padding: 0;
         border: 1px solid var(--color-border);
         border-radius: 50%;
@@ -643,7 +643,16 @@
 
     .search-input {
         width: 220px;
-        padding: 0.45rem 2.1rem 0.45rem 2.1rem;
+        height: 32px;
+        /* line-height (not padding) centers the text - box-sizing:
+           border-box (Tailwind preflight) makes height:32px include the
+           1px border each side, so 30px of line-height exactly fills the
+           remaining content box, matching the 32px logo/theme-toggle-btn/
+           lang-switch button next to it instead of the ~38px an <input>'s
+           inherited line-height:1.5 (from Tailwind's own html{line-height:
+           1.5} preflight rule) would otherwise produce. */
+        padding: 0 2.1rem;
+        line-height: 30px;
         border: 1px solid var(--color-border);
         border-radius: 10px;
         font-size: 0.9rem;
@@ -860,8 +869,13 @@
     .lang-switch .dropdown-toggle {
         display: inline-flex;
         align-items: center;
+        /* height (not vertical padding) matches the 32px logo/theme-toggle-
+           btn/search-input next to it - already a flex container, so
+           align-items:center handles centering the label+caret without
+           needing a line-height trick the way .search-input does. */
+        height: 32px;
         gap: 0.35rem;
-        padding: 0.35rem 0.85rem;
+        padding: 0 0.85rem;
         border-radius: 999px;
         border: 1px solid var(--color-border);
         background: transparent;
