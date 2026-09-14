@@ -442,7 +442,7 @@
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-glow btn-lg rounded-xl px-10 font-bold">
+            <button type="button" @click="openContactForm()" class="btn btn-glow btn-lg rounded-xl px-10 font-bold">
               Escríbenos ✉
             </button>
           </div>
@@ -477,6 +477,7 @@
           </button>
         </div>
 
+        <template x-if="!submitted">
         <form @submit.prevent="submitContact($event)" class="space-y-5">
           <!-- Honeypot: hidden from real users, bots that auto-fill every input tend to fill it -->
           <input
@@ -533,11 +534,20 @@
             </button>
 
             <div class="text-sm">
-              <p x-text="status" class="text-emerald-400"></p>
               <p x-text="error" class="text-rose-400"></p>
             </div>
           </div>
         </form>
+        </template>
+
+        <template x-if="submitted">
+        <div class="text-center py-10">
+          <div class="mx-auto mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-accent">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <p class="text-lg text-white" x-text="status"></p>
+        </div>
+        </template>
       </div>
     </div>
     </div>

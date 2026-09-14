@@ -22,7 +22,7 @@
     <h2 class="mb-4">{{ cta_title }}</h2>
     {% if cta_text %}<p class="text-muted mb-6 mx-auto cta-text">{{ cta_text }}</p>{% endif %}
     {% if cta_button_text %}
-    <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-dark btn-lg px-6">{{ cta_button_text }}</button>
+    <button type="button" @click="openContactForm()" class="btn btn-dark btn-lg px-6">{{ cta_button_text }}</button>
     {% endif %}
     {% if cta_footnote %}<p class="text-muted text-sm mt-4 mb-0">{{ cta_footnote }}</p>{% endif %}
 
