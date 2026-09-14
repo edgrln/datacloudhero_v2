@@ -1,37 +1,37 @@
-Title: Память AI-агентов: рабочий фреймворк вместо зоопарка терминов
+Title: AI Agent Memory: A Working Framework, Not a Terminology Zoo
 Slug: agent-memory-framework
 Lang: en
 Date: 2026-09-14 10:00
-Category: AI-агенты
+Category: AI Agents
 Author: Edgar L
-Tags: AI-агенты, память, LangChain, Anthropic, архитектура
-Summary: Три независимые оси — что хранится, как достаётся и кто владеет, — вместо очередного списка из четырёх-семи «типов памяти».
+Tags: AI agents, memory, LangChain, Anthropic, architecture
+Summary: Three independent axes — what's stored, how it's retrieved, and who owns it — instead of yet another list of four to seven "memory types."
 
-Если почитать несколько материалов про память AI-агентов подряд, немудрено запутаться: один источник называет три вида памяти, другой — четыре или пять, третий вообще обходится без слова «тип» и говорит про «compaction» и «note-taking». При этом почти все так или иначе отсылают к одной и той же научной работе — [CoALA](https://arxiv.org/abs/2309.02427) (Sumers, Yao, Narasimhan, Griffiths, 2023).
+If you read a few articles about AI agent memory back to back, it's easy to get confused: one source names three kinds of memory, another four or five, a third skips the word "type" altogether and talks about "compaction" and "note-taking" instead. Yet almost all of them point back to the same paper — [CoALA](https://arxiv.org/abs/2309.02427) (Sumers, Yao, Narasimhan, Griffiths, 2023).
 
-Сама статья предлагает четыре типа памяти: **working** (рабочая — то, что активно прямо сейчас, в текущем шаге), **semantic** (факты), **episodic** (события), **procedural** (правила и навыки — включая как явно написанный код, так и неявные знания в весах модели). Дальше мы группируем их немного иначе, чем в оригинале, — не потому что CoALA ошибается, а потому что для инженерного решения полезнее смотреть на вопрос с двух разных сторон одновременно.
+The paper itself proposes four memory types: **working** (active right now, in the current step), **semantic** (facts), **episodic** (events), and **procedural** (rules and skills — both explicitly written code and implicit knowledge baked into the model's weights). Below we group them a bit differently from the original — not because CoALA is wrong, but because an engineering solution benefits from looking at the question from two independent angles at once.
 
-Разброс объясним: большинство материалов смешивают в один список два независимых вопроса:
+The spread is easy to explain: most write-ups blend two independent questions into a single list:
 
-1. **Что** запоминается (факт? событие? правило?)
-2. **Как и где** это возвращается модели (прямо сейчас в промпте? в файле на диске? через поиск?)
+1. **What** is remembered (a fact? an event? a rule?)
+2. **How and where** does it come back to the model (right now, in the prompt? in a file on disk? via search?)
 
-Это две разные оси, и на них строится большая часть путаницы. Есть и третья — кто владеет памятью и когда она пишется, — про неё почти никогда не говорят в одном ряду с первыми двумя, поэтому разберём её отдельно ниже. Разделив все три, можно построить простую и рабочую схему — и заодно понять, почему даже профессионалы редко сходятся в терминологии.
+These are two different axes, and most of the confusion comes from mixing them. There's a third axis too — who owns the memory and when it gets written — which almost never gets mentioned alongside the first two, so we'll cover it separately below. Separating all three gives you a simple, workable scheme — and explains why even professionals rarely agree on terminology.
 
 ---
 
-## Ось 1: что хранится
+## Axis 1: what's stored
 
-Тут действительно есть три содержательные категории, и они устойчиво повторяются от источника к источнику:
+Here there really are three substantive categories, and they show up consistently from source to source:
 
-| Тип | Вопрос | Пример |
+| Type | Question | Example |
 |---|---|---|
-| **Факт (semantic)** | Что верно? | «Пользователь предпочитает Python» |
-| **Событие (episodic)** | Что произошло? | «В прошлый раз деплой упал из-за забытой env-переменной» |
-| **Правило (procedural)** | Как действовать? | «Перед деплоем всегда проверяй env-переменные» |
+| **Fact (semantic)** | What's true? | "The user prefers Python" |
+| **Event (episodic)** | What happened? | "Last time, the deploy failed because of a forgotten env variable" |
+| **Rule (procedural)** | How to act? | "Always check env variables before deploying" |
 
 ```python
-# Одна и та же структура для всех трёх — просто разные схемы записи
+# The same structure for all three - just different record shapes
 fact    = {"type": "fact",    "key": "language_pref", "value": "python"}
 episode = {"type": "episode", "task": "deploy", "outcome": "failed",
            "reason": "missing env var", "date": "2026-09-01"}
@@ -39,46 +39,46 @@ rule    = {"type": "rule",    "trigger": "before_deploy",
            "action": "check env vars"}
 ```
 
-Как уже говорилось во вступлении, у CoALA working memory — равноправный четвёртый тип наравне с этими тремя. Мы намеренно переносим её на Ось 2, потому что для инженерного решения важнее не «какой это тип контента», а «оно уже физически лежит в промпте или нет» — так ближе к тому, как эту развилку приходится решать на практике. Дальше по тексту working memory обсуждается именно там.
+As mentioned in the intro, CoALA treats working memory as a fourth type, on equal footing with these three. We deliberately move it to Axis 2, because for an engineering solution what matters more than "what kind of content is this" is "is it physically sitting in the prompt right now or not" — that's closer to the actual decision you have to make in practice. Working memory is discussed there for the rest of this piece.
 
-## Ось 2: как и где это возвращается модели
+## Axis 2: how and where it comes back to the model
 
-Здесь путаются сильнее всего. Ключевая мысль, которую явно формулирует Anthropic в своём разборе [context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): **модель не «помнит» ничего, что физически не лежит в промпте прямо сейчас**. Хранение — это ещё не память. Память — это то, что реально попало в контекстное окно.
+This is where things get confused the most. Anthropic states the key idea explicitly in its piece on [context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): **the model doesn't "remember" anything that isn't physically in the prompt right now**. Storage is not the same as memory. Memory is whatever actually made it into the context window.
 
-Отсюда три механизма:
+That gives us three mechanisms:
 
-- **Working memory** — то, что уже в промпте (system prompt, история диалога, только что вызванный tool result).
-- **Persistent storage** — файл, база, memory store: место, где информация живёт между сессиями, но модель её *не видит*, пока кто-то её туда не положил обратно.
-- **Retrieval** — активный шаг «достать нужный кусок из storage и вставить в working memory». Поиск по смыслу, точный лукап или просто чтение файла по известному пути.
+- **Working memory** — whatever's already in the prompt (the system prompt, the conversation history, a tool result that was just called).
+- **Persistent storage** — a file, a database, a memory store: a place where information lives between sessions, but the model *doesn't see it* until someone puts it back.
+- **Retrieval** — the active step of "pulling the right piece out of storage and inserting it into working memory." Semantic search, an exact lookup, or just reading a file at a known path.
 
 ```python
-# Псевдокод в духе "structured note-taking" из поста Anthropic
+# Pseudocode in the spirit of Anthropic's "structured note-taking" post
 def turn(user_message, working_memory, store):
-    # 1. Retrieval: что из storage релевантно прямо сейчас?
+    # 1. Retrieval: what from storage is relevant right now?
     relevant = store.search(user_message, top_k=3)
     working_memory = compact(working_memory) + relevant
 
-    # 2. Модель отвечает, видя только working_memory
+    # 2. The model responds, seeing only working_memory
     response = call_model(working_memory + [user_message])
 
-    # 3. Что стоит сохранить обратно в storage?
+    # 3. What's worth saving back to storage?
     if worth_remembering(response):
         store.write(extract_memory(response))
 
     return response, working_memory
 ```
 
-![Схема: Fact/Event/Rule в persistent storage, через Retrieval попадают в Working memory; Parametric подключается к Working memory напрямую, без retrieval]({attach}agent-memory-diagram.png)
+![Diagram: Fact/Event/Rule in persistent storage reach Working memory via Retrieval; Parametric connects to Working memory directly, without retrieval]({attach}agent-memory-diagram.png)
 
-Retrieval — не четвёртый вид содержимого, а способ доставки любого из трёх типов из Оси 1. LangChain формулирует это почти дословно в документации Deep Agents: в таблице параметров памяти «Information type» (semantic/episodic/procedural) и «Retrieval» (загружено в промпт по умолчанию / читается по требованию) — это два разных столбца, отвечающих на два разных вопроса, а не пункты одного перечня.
+Retrieval isn't a fourth kind of content — it's a delivery mechanism for any of the three types from Axis 1. LangChain phrases this almost word for word in its Deep Agents documentation: in the memory-parameters table, "Information type" (semantic/episodic/procedural) and "Retrieval" (loaded into the prompt by default / read on demand) are two separate columns answering two separate questions, not entries in one list.
 
 ---
 
-## Особые случаи: parametric и prospective
+## Special cases: parametric and prospective
 
-**Parametric memory** (знания в весах модели) — по классификации CoALA это implicit-форма процедурной памяти; explicit-форма той же процедурной памяти — как раз написанные правила из «rule» выше. Но для инженерной практики эти две формы стоит развести: explicit-правило можно прочитать, отредактировать и заверсионировать как обычные данные, а implicit-знания в весах — нет. Это фундамент, на котором работает всё остальное: общая грамотность модели, здравый смысл, факты, усвоенные при обучении. Она не «извлекается» отдельным шагом — уже неотъемлемо участвует в генерации каждого токена. В схему управления памятью её включать бессмысленно: точечно отредактировать нельзя, можно только дообучить или переобучить модель целиком.
+**Parametric memory** (knowledge baked into the model's weights) — in CoALA's classification, this is the implicit form of procedural memory; the explicit form of that same procedural memory is exactly the written rules from "rule" above. For engineering purposes, though, the two forms are worth keeping apart: an explicit rule can be read, edited, and versioned like ordinary data; implicit knowledge in the weights cannot. This is the foundation everything else runs on: the model's general competence, common sense, facts absorbed during training. It isn't "retrieved" as a separate step — it's already an inseparable part of generating every token. There's no point including it in a memory-management scheme: you can't edit it selectively, only fine-tune or retrain the whole model.
 
-**Prospective memory** («напомни мне в пятницу») — один из тех пунктов, из-за которых в некоторых классификациях список разрастается до четырёх-пяти типов вместо трёх (см. вступление). Отдельной оси или типа под него заводить не нужно: это частный случай Оси 2: запись в persistent storage плюс внешний триггер (cron, очередь задач), который в нужный момент кладёт эту запись в working memory нового запуска. Технически это ничем не отличается от обычного правила с полем `trigger_at` вместо `trigger: "before_deploy"`.
+**Prospective memory** ("remind me on Friday") is one of the items that inflates some classifications to four or five types instead of three (see the intro). It doesn't need its own axis or type: it's just a special case of Axis 2 — a write to persistent storage plus an external trigger (a cron job, a task queue) that, at the right moment, drops that record into the working memory of a new run. Technically, it's no different from an ordinary rule with a `trigger_at` field instead of `trigger: "before_deploy"`.
 
 ```python
 reminder = {
@@ -91,18 +91,18 @@ reminder = {
 
 ---
 
-## Ось 3: кому принадлежит память
+## Axis 3: who owns the memory
 
-Есть и третье измерение, которое обычно упускают из виду в разговорах про «типы памяти», хотя на практике оно решает больше инженерных проблем, чем классификация по содержанию. Это governance — кто пишет, кто читает и когда:
+There's a third dimension that usually gets overlooked in "types of memory" conversations, even though in practice it solves more engineering problems than any classification by content. This is governance — who writes, who reads, and when:
 
-- **Scope** — память привязана к пользователю, к агенту (общая для всех) или к организации (политики и compliance).
-- **Update strategy** — память пишется прямо во время диалога (hot path) или отдельным фоновым процессом между сессиями (background consolidation / «sleep time compute»).
-- **Permissions** — read-write по умолчанию, но для общих политик и compliance-правил обычно делают read-only, чтобы одна инъекция в диалоге не смогла тихо переписать поведение агента для всех остальных пользователей.
+- **Scope** — is the memory tied to a user, to the agent (shared across everyone), or to the organization (policy and compliance)?
+- **Update strategy** — is the memory written during the conversation itself (hot path), or by a separate background process between sessions (background consolidation / "sleep-time compute")?
+- **Permissions** — read-write by default, but shared policy and compliance rules are usually made read-only, so that one injected instruction in a conversation can't quietly rewrite the agent's behavior for everyone else.
 
 ```python
-# Организационная память read-only — агент читает, но не пишет
-# (точные пути к полям рантайм-объекта зависят от версии LangChain/Deep Agents;
-# здесь — актуальная на момент написания схема из их документации)
+# Org-wide memory is read-only - the agent reads it but never writes to it
+# (the exact field paths on the runtime object depend on the LangChain/Deep
+# Agents version; this is the scheme current in their docs as of writing)
 backend = CompositeBackend(
     default=StateBackend(),
     routes={
@@ -112,62 +112,62 @@ backend = CompositeBackend(
 )
 ```
 
-![Схема: Agent читает и пишет в User scope (read-write), из Org scope только читает; попытка агента записать инструкцию из диалога в Org scope блокируется правами доступа]({attach}agent-memory-governance-diagram.png)
+![Diagram: the Agent reads and writes to User scope (read-write), but only reads from Org scope; an attempt by the agent to write an instruction from the conversation into Org scope is blocked by permissions]({attach}agent-memory-governance-diagram.png)
 
-Именно эта ось чаще всего создаёт проблемы уже в проде, причём не на этапе прототипа, а позже, когда к памяти получают доступ несколько пользователей или агентов сразу. Практический пример: агент поддержки записывает в общую память тикета заметку вида «клиент попросил пропустить проверку возраста» — и если эту память без разбора читают другие сессии или другой агент, инструкция может незаметно повлиять на чужой диалог. Отсюда рабочее правило по умолчанию: скоуп на пользователя, если нет явной причины делиться; общие политики — read-only и заполняются кодом приложения, а не самим агентом в диалоге.
+This axis is the one that most often causes trouble in production - not at the prototype stage, but later, once several users or agents get access to the same memory at once. A concrete example: a support agent writes a note into a ticket's shared memory saying "the customer asked us to skip the age check" — and if that memory is read indiscriminately by other sessions or another agent, the instruction can quietly bleed into someone else's conversation. Hence the default rule of thumb: scope to the user unless there's an explicit reason to share; shared policies are read-only and get populated by application code, not by the agent itself mid-conversation.
 
 ---
 
-## Коротко: чем оси отличаются друг от друга
+## In short: how the axes differ
 
-Прежде чем сводить всё в таблицу — три оси одним взглядом, потому что дальше они постоянно будут использоваться вместе:
+Before rolling everything into a table - the three axes at a glance, because from here on they're always used together:
 
-- **Ось 1 (что)** — какого рода информация: устойчивый факт, разовое событие или повторяемое правило. Отвечает на вопрос «что это по содержанию».
-- **Ось 2 (как и где)** — физически лежит ли это в промпте прямо сейчас (working memory), хранится ли отдельно (persistent storage) и как попадает из одного в другое (retrieval). Отвечает на вопрос «где это находится в конкретный момент».
-- **Ось 3 (чьё)** — кому принадлежит: пользователю, агенту или организации; кто и когда это пишет; можно ли это редактировать или только читать. Отвечает на вопрос «кто управляет этой записью».
+- **Axis 1 (what)** — what kind of information this is: a stable fact, a one-off event, or a repeatable rule. Answers "what is this, content-wise."
+- **Axis 2 (how and where)** — is it physically sitting in the prompt right now (working memory), stored separately (persistent storage), and how does it move from one to the other (retrieval). Answers "where is this at a given moment."
+- **Axis 3 (whose)** — who owns it: a user, the agent, or the organization; who writes it and when; can it be edited or only read. Answers "who controls this record."
 
-Это не альтернативные классификации на замену друг другу, а три независимых среза одной и той же записи: у любого факта, события или правила есть свой ответ по каждой из трёх осей одновременно (пример разбора одной записи по всем трём — ниже, в кейсе с агентом поддержки).
+These aren't alternative classifications competing to replace each other - they're three independent cuts through the same record: any fact, event, or rule has its own answer on each of the three axes at once (a worked example of one record across all three is below, in the support-agent case).
 
-## Собираем фреймворк
+## Putting the framework together
 
-Сведём эту схему в одну таблицу 3×3 плюс ось governance сверху:
+Let's fold this scheme into a single 3×3 table, plus the governance axis on top:
 
 |                     | Working memory | Persistent storage | Retrieval |
 |---------------------|-----------------|---------------------|-----------|
-| **Факт**            | Пока не вычищен из контекста | `facts/user_123.md` | точный лукап по ключу |
-| **Событие**         | Последние N шагов диалога | лог прошлых запусков / thread history | поиск по смыслу или по `user_id`/`org_id` |
-| **Правило**         | Часть system prompt | `procedures/deploy_checklist.md` | обычно читается целиком, не ищется |
+| **Fact**            | Until it's evicted from context | `facts/user_123.md` | exact lookup by key |
+| **Event**           | Last N conversation turns | run history / thread history log | semantic search, or by `user_id`/`org_id` |
+| **Rule**            | Part of the system prompt | `procedures/deploy_checklist.md` | usually read whole, not searched |
 
-Для каждой ячейки отдельно решается: кто владеет этой памятью (user / agent / org) и когда она пишется (hot path / background).
+For each cell, you separately decide: who owns this memory (user / agent / org), and when it gets written (hot path / background).
 
-Практический алгоритм при проектировании памяти агента:
+A practical checklist for designing an agent's memory:
 
-1. **Что это** — устойчивый факт, разовое событие или повторяемое правило?
-2. **Переживёт ли это конец сессии?** Если нет — working memory достаточно, ничего сохранять не нужно.
-3. **Как модель это найдёт в следующий раз** — по точному ключу, по смыслу, по времени, или файл просто всегда читается целиком?
-4. **Кто владеет этой информацией** — конкретный пользователь, агент в целом, или организация? Нужен ли read-only, чтобы защититься от инъекций через shared state?
-5. **Когда это пишется** — сразу в диалоге, или можно отложить в фоновую консолидацию, чтобы не тратить латентность на каждый ход?
+1. **What is it** — a stable fact, a one-off event, or a repeatable rule?
+2. **Will it outlive the session?** If not, working memory is enough - nothing needs saving.
+3. **How will the model find it next time** — by exact key, by meaning, by time, or is the file just always read in full?
+4. **Who owns this information** — a specific user, the agent as a whole, or the organization? Do you need read-only to guard against injection through shared state?
+5. **When is it written** — right away in the conversation, or can it be deferred to background consolidation so you're not spending latency on every turn?
 
-Ответьте на эти пять вопросов для каждого вида информации — и получится архитектура памяти агента, а не список абстрактных «типов».
+Answer these five questions for each kind of information, and you get an agent memory architecture - not a list of abstract "types."
 
-### Пример: агент поддержки клиентов
+### Example: a customer support agent
 
-Три кандидата на «память» из одного диалога с клиентом SaaS-продукта:
+Three candidates for "memory" from one conversation with a SaaS customer:
 
-1. *«Клиент на тарифе Pro, оплата продлевается 2026-11-01»* — факт. Переживёт сессию → хранится в `facts/customer_{id}.md` или в таблице CRM; скоуп — пользователь, read-write; пишется в hot path сразу после ответа billing API; находится по точному ключу `customer_id`.
-2. *«За последний месяц клиент три раза жаловался на медленную загрузку отчётов»* — событие. Переживёт сессию → лог тикетов; скоуп — пользователь (или agent, если паттерн нужно эскалировать на команду продукта); пишется в hot path при закрытии тикета; находится поиском по смыслу или по `customer_id` + временному окну.
-3. *«Возврат денег оформляется только через форму X, вручную — нельзя»* — правило. Это не про конкретного клиента, живёт дольше любой сессии → `policies/refunds.md`; скоуп — организация, для агента **read-only**; пишется только кодом или командой поддержки; читается целиком как часть system prompt при любом обращении к теме возвратов.
+1. *"Customer is on the Pro plan, renews 2026-11-01"* — a fact. Outlives the session → stored in `facts/customer_{id}.md` or a CRM table; scope: user, read-write; written in the hot path right after the billing API responds; found by exact `customer_id` lookup.
+2. *"Over the last month, the customer complained three times about slow report loading"* — an event. Outlives the session → a ticket log; scope: user (or agent, if the pattern needs escalating to the product team); written in the hot path when the ticket closes; found by semantic search or by `customer_id` plus a time window.
+3. *"Refunds only go through form X, never manually"* — a rule. It's not about any one customer and outlives any single session → `policies/refunds.md`; scope: organization, **read-only** for the agent; written only by code or the support team; read in full as part of the system prompt whenever refunds come up.
 
-Три записи выглядят одинаково — «что-то, что стоит запомнить», — а инфраструктура и права у них разные. Ради этого и стоит разводить содержимое (Ось 1), способ доставки (Ось 2) и владение (Ось 3) отдельно: одна табличка «тип памяти» без этих осей не подскажет, где хранить и кто может писать.
-
----
-
-## Почему термины расходятся даже у профессионалов
-
-Область молодая и быстро меняется: устоявшегося стандарта нет, а термины во многом заимствованы из когнитивной психологии — удобная метафора, но не точная модель для программной архитектуры. К тому же каждая компания описывает память под свой продукт: LangChain — под LangGraph/Deep Agents, Anthropic — под контекстное окно Claude, IBM — как обзорный учебный материал. Поэтому одни и те же слова получают разный вес и разную вложенность, а из в общем-то простой идеи «сохрани данные, потом достань нужный кусок обратно» вырастают списки из четырёх, пяти, семи пунктов — не обязательно потому, что кто-то ошибается, а потому что каждый список отвечает на свой практический вопрос и рассчитан на свою аудиторию.
-
-Практический вывод отсюда простой: встретив очередную классификацию памяти, не пытайтесь свести её к одному «правильному» списку типов. Полезнее спросить — на какой из трёх осей (что / как достаётся / кто владеет) она вообще отвечает, и какую инженерную задачу помогает решить именно в вашем случае.
+The three records look the same on the surface - "something worth remembering" - but their infrastructure and permissions are completely different. That's exactly why it's worth separating content (Axis 1), delivery (Axis 2), and ownership (Axis 3): a single "memory type" table without these axes won't tell you where to store something or who's allowed to write it.
 
 ---
 
-*Источники: [CoALA (Sumers et al., 2023)](https://arxiv.org/abs/2309.02427), [Anthropic — Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [LangChain — Memory for Deep Agents](https://docs.langchain.com/oss/python/deepagents/memory), [LangChain — Memory for agents (blog)](https://www.langchain.com/blog/memory-for-agents), [IBM — What is AI agent memory?](https://www.ibm.com/think/topics/ai-agent-memory).*
+## Why the terminology diverges even among professionals
+
+The field is young and moves fast: there's no settled standard, and the terms are largely borrowed from cognitive psychology - a convenient metaphor, but not a precise model for software architecture. On top of that, every company describes memory around its own product: LangChain around LangGraph/Deep Agents, Anthropic around Claude's context window, IBM as general-purpose educational material. So the same words end up with different weight and different nesting, and what's basically the simple idea of "save the data, then fetch the right piece back" grows into lists of four, five, seven items - not necessarily because someone's wrong, but because each list answers its own practical question for its own audience.
+
+The practical takeaway is simple: the next time you run into a memory classification, don't try to force it into one "correct" list of types. It's more useful to ask which of the three axes (what / how it's retrieved / who owns it) it's actually answering, and which engineering problem it helps solve in your particular case.
+
+---
+
+*Sources: [CoALA (Sumers et al., 2023)](https://arxiv.org/abs/2309.02427), [Anthropic — Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [LangChain — Memory for Deep Agents](https://docs.langchain.com/oss/python/deepagents/memory), [LangChain — Memory for agents (blog)](https://www.langchain.com/blog/memory-for-agents), [IBM — What is AI agent memory?](https://www.ibm.com/think/topics/ai-agent-memory).*
