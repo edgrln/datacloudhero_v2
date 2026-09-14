@@ -21,7 +21,15 @@
 
     {% include "partials/ai_actions.html" with context %}
 
-    <div class="content article-body">
+    {# prose-lg activates @tailwindcss/typography (tailwind.config.js);
+       no dark:prose-invert - .prose's own color variables (tailwind-
+       input.css) already point at our theme-aware --color-* tokens
+       directly, which flip under .dark on their own; adding
+       prose-invert too would just redeclare the same properties a
+       second, redundant way. max-w-none disables the plugin's own
+       65ch line-length cap - .content-wrap (blog_base.html) already
+       constrains article width to 780px. #}
+    <div class="content article-body prose prose-lg max-w-none">
         {{ article.content }}
     </div>
 

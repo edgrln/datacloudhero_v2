@@ -427,20 +427,66 @@
         font-weight: 600;
     }
 
-    .article-body {
-        font-size: 1.125rem;
-        line-height: 1.75;
+    /* @tailwindcss/typography (see tailwind.config.js) now owns article/
+       page prose sizing - .article-body/.content-wrap also carry the
+       `prose prose-lg` utility classes (article.html/page.html) that
+       actually activate it; prose-lg's own 1.125rem/~1.78 font-size/
+       line-height replace what used to be hand-set here, and its own
+       paragraph/list/table/blockquote spacing replaces the bespoke
+       overrides this block used to carry. Re-point its color variables at
+       our own theme tokens instead of its default gray scale - since
+       --color-* already flips under .dark, this one definition (not
+       repeated under .dark) covers both themes. */
+    .prose {
+        --tw-prose-body: var(--color-body);
+        --tw-prose-headings: var(--color-emphasis);
+        --tw-prose-lead: var(--color-secondary);
+        --tw-prose-links: var(--accent);
+        --tw-prose-bold: var(--color-emphasis);
+        --tw-prose-counters: var(--color-secondary);
+        --tw-prose-bullets: var(--color-secondary);
+        --tw-prose-hr: var(--color-border);
+        --tw-prose-quotes: var(--color-emphasis);
+        --tw-prose-quote-borders: var(--color-border);
+        --tw-prose-captions: var(--color-secondary);
+        --tw-prose-code: var(--color-emphasis);
+        --tw-prose-pre-code: var(--color-body);
+        --tw-prose-pre-bg: var(--color-tertiary-bg);
+        --tw-prose-th-borders: var(--color-border);
+        --tw-prose-td-borders: var(--color-border);
     }
 
-    /* A bit more room between paragraphs than the sitewide default (1rem,
-       see the global `p` rule above) - long-form article prose reads more
-       comfortably with a clearer visual break between paragraphs than
-       between the lines within one (Docusaurus's own docs, for reference,
-       use ~1.25x their font-size; this matches that ratio for our own
-       1.125rem article font-size). */
-    .article-body p,
-    .content-wrap p {
-        margin-bottom: 1.5rem;
+    /* Fenced code blocks are Pygments/pygments.css output (.highlight >
+       pre > code), which already fully styles the box (border, radius,
+       background, both themes) - without this, typography's own default
+       `pre` box (dark background, its own padding/radius) would stack on
+       top of Pygments' and the two would visually fight. Neutralize
+       typography's pre/code chrome specifically inside .highlight, leaving
+       its inline-code backtick styling (outside .highlight) untouched.
+       Selector is a compound class (.prose.article-body, not just
+       .article-body) specifically to out-specificity typography's own
+       :where()-based selectors regardless of plugin/layer source order. */
+    .prose.article-body .highlight pre,
+    .prose.content-wrap .highlight pre {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+        border-radius: 0;
+    }
+
+    .prose.article-body .highlight code,
+    .prose.content-wrap .highlight code {
+        background: transparent;
+        padding: 0;
+        font-weight: inherit;
+        color: inherit;
+    }
+
+    .prose.article-body .highlight code::before,
+    .prose.article-body .highlight code::after,
+    .prose.content-wrap .highlight code::before,
+    .prose.content-wrap .highlight code::after {
+        content: none;
     }
 
     /* ---------- AI actions (copy/summarize as Markdown) ---------- */
