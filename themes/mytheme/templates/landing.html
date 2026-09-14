@@ -302,9 +302,41 @@
       background: rgba(4, 8, 16, 0.88);
     }
 
+    /* Matches the blog theme's own .container breakpoints/padding
+       exactly (see themes/mytheme/static/css/tailwind-input.css), so
+       the logo's left inset lines up with the blog header at every
+       viewport width - was a flat max-width:1600px + the navbar's own
+       px-6/lg:px-8 padding before, which only matched by coincidence at
+       one specific width. Scoped to the navbar only (both the desktop
+       row and the mobile dropdown panel use .navbar-inner) -
+       .page-wrapper, used by every other section, keeps its own wider
+       1600px layout untouched. */
     .navbar-inner {
-      max-width: 1600px;
+      width: 100%;
+      max-width: none;
       margin: 0 auto;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    @media (min-width: 576px) {
+      .navbar-inner { max-width: 540px; }
+    }
+
+    @media (min-width: 768px) {
+      .navbar-inner { max-width: 720px; }
+    }
+
+    @media (min-width: 992px) {
+      .navbar-inner { max-width: 960px; }
+    }
+
+    @media (min-width: 1200px) {
+      .navbar-inner { max-width: 1140px; }
+    }
+
+    @media (min-width: 1400px) {
+      .navbar-inner { max-width: 1320px; }
     }
 
     .service-card {
