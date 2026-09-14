@@ -52,8 +52,32 @@
         color: var(--accent-hover);
     }
 
-    h1, h2, h3 {
+    /* Tailwind's preflight resets every heading to inherit font-size/weight
+       (expects size utility classes in the markup) - Bootstrap's own reset
+       gave h1-h6 real default sizes instead, and most templates never
+       added explicit text-*xl classes since they never needed to under
+       Bootstrap. Restoring Bootstrap 5's own default heading scale here
+       (rather than picking arbitrary Tailwind sizes) is what keeps this a
+       1:1 port instead of a redesign. */
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        line-height: 1.2;
         letter-spacing: -0.01em;
+    }
+
+    h1 { font-size: calc(1.375rem + 1.5vw); }
+    h2 { font-size: calc(1.325rem + 0.9vw); }
+    h3 { font-size: calc(1.3rem + 0.6vw); }
+    h4 { font-size: calc(1.275rem + 0.3vw); }
+    h5 { font-size: 1.25rem; }
+    h6 { font-size: 1rem; }
+
+    @media (min-width: 1200px) {
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
     }
 
     /* Tailwind's preflight resets <hr> to a plain 1px currentColor line -
