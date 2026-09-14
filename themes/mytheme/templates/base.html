@@ -199,7 +199,12 @@
 
     <nav class="navbar navbar-expand-lg site-navbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ SITEURL }}/">
+            {# Landing page root for the current language - / for English,
+               /fr//de//es/ for the others. Was hardcoded to SITEURL + '/'
+               (always English), so a Spanish blog reader clicking the logo
+               landed on the English homepage instead of /es/. #}
+            {% set landing_root = (current_lang + '/') if current_lang != DEFAULT_LANG else '' %}
+            <a class="navbar-brand" href="{{ SITEURL }}/{{ landing_root }}">
                 <img src="{{ SITEURL }}/theme/img/logo.svg" alt="{{ SITENAME }}" height="28">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
