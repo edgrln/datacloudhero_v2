@@ -16,7 +16,7 @@
     position: relative;
     margin-bottom: 1.5rem;
     border-radius: 10px;
-    border: 1px solid var(--bs-border-color);
+    border: 1px solid var(--color-border);
     background: #f6f6f6;
 }
 
@@ -46,10 +46,10 @@
     font-size: 0.75rem;
     font-weight: 500;
     line-height: 1;
-    border: 1px solid var(--bs-border-color);
+    border: 1px solid var(--color-border);
     border-radius: 6px;
-    background: var(--bs-body-bg);
-    color: var(--bs-secondary-color);
+    background: var(--color-body-bg);
+    color: var(--color-secondary);
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -127,60 +127,60 @@
 .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm { color: #BB60D5 }
 
 /* ---------- Token colors: dark - Pygments "one-dark" ---------- */
-[data-bs-theme="dark"] .article-body .highlight,
-[data-bs-theme="dark"] .content-wrap .highlight {
+.dark .article-body .highlight,
+.dark .content-wrap .highlight {
     background: #282C34;
     border-color: #3B4048;
 }
-[data-bs-theme="dark"] .highlight { color: #ABB2BF; }
-[data-bs-theme="dark"] .highlight .c { color: #7F848E }
-[data-bs-theme="dark"] .highlight .err { color: #ABB2BF }
-[data-bs-theme="dark"] .highlight .k { color: #C678DD }
-[data-bs-theme="dark"] .highlight .n { color: #E06C75 }
-[data-bs-theme="dark"] .highlight .o { color: #56B6C2 }
-[data-bs-theme="dark"] .highlight .p { color: #ABB2BF }
-[data-bs-theme="dark"] .highlight .ch,
-[data-bs-theme="dark"] .highlight .cm,
-[data-bs-theme="dark"] .highlight .cp,
-[data-bs-theme="dark"] .highlight .cpf,
-[data-bs-theme="dark"] .highlight .c1,
-[data-bs-theme="dark"] .highlight .cs { color: #7F848E }
-[data-bs-theme="dark"] .highlight .kc, [data-bs-theme="dark"] .highlight .kt { color: #E5C07B }
-[data-bs-theme="dark"] .highlight .kd,
-[data-bs-theme="dark"] .highlight .kn,
-[data-bs-theme="dark"] .highlight .kp,
-[data-bs-theme="dark"] .highlight .kr { color: #C678DD }
-[data-bs-theme="dark"] .highlight .m,
-[data-bs-theme="dark"] .highlight .mb, [data-bs-theme="dark"] .highlight .mf,
-[data-bs-theme="dark"] .highlight .mh, [data-bs-theme="dark"] .highlight .mi,
-[data-bs-theme="dark"] .highlight .mo, [data-bs-theme="dark"] .highlight .il { color: #D19A66 }
-[data-bs-theme="dark"] .highlight .s,
-[data-bs-theme="dark"] .highlight .sa, [data-bs-theme="dark"] .highlight .sb,
-[data-bs-theme="dark"] .highlight .sc, [data-bs-theme="dark"] .highlight .dl,
-[data-bs-theme="dark"] .highlight .sd, [data-bs-theme="dark"] .highlight .s2,
-[data-bs-theme="dark"] .highlight .se, [data-bs-theme="dark"] .highlight .sh,
-[data-bs-theme="dark"] .highlight .si, [data-bs-theme="dark"] .highlight .sx,
-[data-bs-theme="dark"] .highlight .sr, [data-bs-theme="dark"] .highlight .s1,
-[data-bs-theme="dark"] .highlight .ss { color: #98C379 }
-[data-bs-theme="dark"] .highlight .na,
-[data-bs-theme="dark"] .highlight .no, [data-bs-theme="dark"] .highlight .ni,
-[data-bs-theme="dark"] .highlight .ne, [data-bs-theme="dark"] .highlight .nl,
-[data-bs-theme="dark"] .highlight .nn, [data-bs-theme="dark"] .highlight .nx,
-[data-bs-theme="dark"] .highlight .py, [data-bs-theme="dark"] .highlight .nt,
-[data-bs-theme="dark"] .highlight .nv,
-[data-bs-theme="dark"] .highlight .vc, [data-bs-theme="dark"] .highlight .vg,
-[data-bs-theme="dark"] .highlight .vi, [data-bs-theme="dark"] .highlight .vm { color: #E06C75 }
-[data-bs-theme="dark"] .highlight .nb, [data-bs-theme="dark"] .highlight .nc,
-[data-bs-theme="dark"] .highlight .bp { color: #E5C07B }
-[data-bs-theme="dark"] .highlight .nd { color: #61AFEF }
-[data-bs-theme="dark"] .highlight .nf { color: #61AFEF; font-weight: bold }
-[data-bs-theme="dark"] .highlight .ow, [data-bs-theme="dark"] .highlight .fm { color: #56B6C2 }
-[data-bs-theme="dark"] .highlight .w, [data-bs-theme="dark"] .highlight .pm,
-[data-bs-theme="dark"] .highlight .g, [data-bs-theme="dark"] .highlight .l,
-[data-bs-theme="dark"] .highlight .x, [data-bs-theme="dark"] .highlight .esc,
-[data-bs-theme="dark"] .highlight .gd, [data-bs-theme="dark"] .highlight .ge,
-[data-bs-theme="dark"] .highlight .ges, [data-bs-theme="dark"] .highlight .gr,
-[data-bs-theme="dark"] .highlight .gh, [data-bs-theme="dark"] .highlight .gi,
-[data-bs-theme="dark"] .highlight .go, [data-bs-theme="dark"] .highlight .gp,
-[data-bs-theme="dark"] .highlight .gs, [data-bs-theme="dark"] .highlight .gu,
-[data-bs-theme="dark"] .highlight .gt, [data-bs-theme="dark"] .highlight .ld { color: #ABB2BF }
+.dark .highlight { color: #ABB2BF; }
+.dark .highlight .c { color: #7F848E }
+.dark .highlight .err { color: #ABB2BF }
+.dark .highlight .k { color: #C678DD }
+.dark .highlight .n { color: #E06C75 }
+.dark .highlight .o { color: #56B6C2 }
+.dark .highlight .p { color: #ABB2BF }
+.dark .highlight .ch,
+.dark .highlight .cm,
+.dark .highlight .cp,
+.dark .highlight .cpf,
+.dark .highlight .c1,
+.dark .highlight .cs { color: #7F848E }
+.dark .highlight .kc, .dark .highlight .kt { color: #E5C07B }
+.dark .highlight .kd,
+.dark .highlight .kn,
+.dark .highlight .kp,
+.dark .highlight .kr { color: #C678DD }
+.dark .highlight .m,
+.dark .highlight .mb, .dark .highlight .mf,
+.dark .highlight .mh, .dark .highlight .mi,
+.dark .highlight .mo, .dark .highlight .il { color: #D19A66 }
+.dark .highlight .s,
+.dark .highlight .sa, .dark .highlight .sb,
+.dark .highlight .sc, .dark .highlight .dl,
+.dark .highlight .sd, .dark .highlight .s2,
+.dark .highlight .se, .dark .highlight .sh,
+.dark .highlight .si, .dark .highlight .sx,
+.dark .highlight .sr, .dark .highlight .s1,
+.dark .highlight .ss { color: #98C379 }
+.dark .highlight .na,
+.dark .highlight .no, .dark .highlight .ni,
+.dark .highlight .ne, .dark .highlight .nl,
+.dark .highlight .nn, .dark .highlight .nx,
+.dark .highlight .py, .dark .highlight .nt,
+.dark .highlight .nv,
+.dark .highlight .vc, .dark .highlight .vg,
+.dark .highlight .vi, .dark .highlight .vm { color: #E06C75 }
+.dark .highlight .nb, .dark .highlight .nc,
+.dark .highlight .bp { color: #E5C07B }
+.dark .highlight .nd { color: #61AFEF }
+.dark .highlight .nf { color: #61AFEF; font-weight: bold }
+.dark .highlight .ow, .dark .highlight .fm { color: #56B6C2 }
+.dark .highlight .w, .dark .highlight .pm,
+.dark .highlight .g, .dark .highlight .l,
+.dark .highlight .x, .dark .highlight .esc,
+.dark .highlight .gd, .dark .highlight .ge,
+.dark .highlight .ges, .dark .highlight .gr,
+.dark .highlight .gh, .dark .highlight .gi,
+.dark .highlight .go, .dark .highlight .gp,
+.dark .highlight .gs, .dark .highlight .gu,
+.dark .highlight .gt, .dark .highlight .ld { color: #ABB2BF }

@@ -1,0 +1,856 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Design tokens
+   Bootstrap's own [data-bs-theme="dark"] CSS used to redefine --bs-* colors
+   automatically; now that Bootstrap is gone these six tokens are self-owned
+   (values below are Bootstrap 5.3.3's own light/dark defaults, kept
+   identical on purpose for a 1:1 visual port - see CLAUDE.md). Dark mode is
+   a plain `.dark` class on <html> (Tailwind's `darkMode: 'class'`), toggled
+   by the inline FOUC-guard script and #themeToggle handler in base.html.
+   ========================================================================== */
+@layer base {
+    :root {
+        --accent: #1bab53;
+        --accent-rgb: 27, 171, 83;
+        --accent-hover: #159647;
+
+        --color-body: #212529;
+        --color-body-bg: #fff;
+        --color-border: #dee2e6;
+        --color-tertiary-bg: #f8f9fa;
+        --color-secondary: rgba(33, 37, 41, .75);
+        --color-emphasis: #000;
+    }
+
+    .dark {
+        --color-body: #dee2e6;
+        --color-body-bg: #212529;
+        --color-border: #495057;
+        --color-tertiary-bg: #2b3035;
+        --color-secondary: rgba(222, 226, 230, .75);
+        --color-emphasis: #fff;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--color-body);
+        background: var(--color-body-bg);
+    }
+
+    /* Tailwind's preflight strips the browser's default link color -
+       Bootstrap used to retarget its own --bs-link-color to the accent,
+       there's nothing left to retarget now so this is the direct rule. */
+    a {
+        color: var(--accent);
+        text-decoration: inherit;
+    }
+
+    a:hover {
+        color: var(--accent-hover);
+    }
+
+    h1, h2, h3 {
+        letter-spacing: -0.01em;
+    }
+
+    /* Tailwind's preflight resets <hr> to a plain 1px currentColor line -
+       tie it to the theme's border token instead, matching every other
+       divider in the theme (search-see-all, footer, cards, ...). */
+    hr {
+        border-color: var(--color-border);
+        opacity: 1;
+    }
+
+    /* Alpine.js: hide un-initialized `x-show`/`x-cloak` elements until
+       Alpine has run, so they don't flash visible on load. */
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /* Replaces Bootstrap's responsive .container (same breakpoints/max-widths
+       it shipped by default) - used by the navbar, main content, and footer. */
+    .container {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    @media (min-width: 576px) {
+        .container { max-width: 540px; }
+    }
+
+    @media (min-width: 768px) {
+        .container { max-width: 720px; }
+    }
+
+    @media (min-width: 992px) {
+        .container { max-width: 960px; }
+    }
+
+    @media (min-width: 1200px) {
+        .container { max-width: 1140px; }
+    }
+
+    @media (min-width: 1400px) {
+        .container { max-width: 1320px; }
+    }
+
+    .content-wrap {
+        max-width: 780px;
+    }
+
+    /* ---------- Buttons (replaces Bootstrap's .btn family) ---------- */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.375rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        line-height: 1.4;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    }
+
+    .btn-sm {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.8125rem;
+        border-radius: 0.3rem;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.05rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .btn-outline:hover {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    /* Bootstrap's .btn-dark is a fixed dark color in both themes (not tied
+       to --color-emphasis, which flips with light/dark) - kept that way. */
+    .btn-dark {
+        background: #212529;
+        border-color: #212529;
+        color: #fff;
+    }
+
+    .btn-dark:hover {
+        background: #1c1f23;
+        border-color: #1c1f23;
+    }
+
+    /* ---------- Forms (replaces Bootstrap's .form-control/.form-label,
+       used only by partials/contact_modal.html) ---------- */
+    .form-label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.65rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--color-body);
+        background: var(--color-tertiary-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 0.75rem;
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.2);
+    }
+
+    /* ---------- Dropdowns (replaces Bootstrap's JS-driven .dropdown-menu,
+       now shown/hidden via Alpine x-show - see base.html/ai_actions.html).
+       No `display` property here on purpose: Alpine's x-show sets inline
+       display:none while hidden and clears it while shown, falling back to
+       the browser's default `display:block` for a div - forcing display:none
+       here would win over that cleared inline style and stay stuck hidden. */
+    .dropdown {
+        position: relative;
+    }
+
+    /* Small down-caret after any dropdown trigger, matching Bootstrap's
+       .dropdown-toggle::after (used by both the language switcher and the
+       AI-actions button). */
+    .dropdown-toggle::after {
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 0.3em;
+        vertical-align: 0.15em;
+        border-left: 0.3em solid transparent;
+        border-right: 0.3em solid transparent;
+        border-top: 0.3em solid currentColor;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        min-width: 10rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0;
+        background: var(--color-body-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .dropdown-menu-end {
+        left: auto;
+        right: 0;
+    }
+
+    .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.45rem 1rem;
+        border: none;
+        background: transparent;
+        color: var(--color-body);
+        font-size: 0.9rem;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background: var(--color-tertiary-bg);
+        color: var(--color-emphasis);
+    }
+
+    .dropdown-item.active {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .dropdown-divider {
+        height: 0;
+        margin: 0.4rem 0;
+        border-top: 1px solid var(--color-border);
+    }
+
+    /* Close ("x") button, e.g. the contact modal - a plain character glyph
+       instead of an icon font/image, consistent with the rest of the theme
+       hand-authoring its icons as inline SVG rather than depending on a
+       Bootstrap-Icons-style asset. */
+    .btn-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--color-secondary);
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .btn-close:hover {
+        color: var(--color-emphasis);
+    }
+
+    .btn-close::before {
+        content: "\00d7";
+    }
+
+    /* ---------- Misc text utilities Tailwind doesn't know the palette for
+       (replaces Bootstrap's .text-muted/.lead) ---------- */
+    .text-muted {
+        color: var(--color-secondary);
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .lead {
+        font-size: 1.15rem;
+        color: var(--color-secondary);
+    }
+
+    /* ---------- Sidebar (blog layout) ---------- */
+    .sidebar-sticky {
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .sidebar-heading {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar-year {
+        font-weight: 700;
+        color: var(--color-secondary);
+        font-size: 1.05rem;
+        text-transform: none;
+        margin-bottom: 0.5rem;
+    }
+
+    .sidebar-list li {
+        margin-bottom: 0.4rem;
+    }
+
+    .sidebar-link {
+        color: var(--color-body);
+        text-decoration: none;
+        font-size: 1rem;
+    }
+
+    .sidebar-link:hover {
+        color: var(--accent);
+    }
+
+    .sidebar-link.active {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .article-body {
+        font-size: 1.125rem;
+        line-height: 1.75;
+    }
+
+    /* ---------- AI actions (copy/summarize as Markdown) ---------- */
+    .ai-actions .btn {
+        font-size: 0.8125rem;
+    }
+
+    .ai-actions .js-ai-actions-label {
+        min-width: 6.5em;
+        display: inline-block;
+        text-align: left;
+    }
+
+    .article-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+    }
+
+    /* Markdown tables (e.g. cookie-policy.md) render as bare <table> - there's
+       no component class to add from Markdown source, so style them
+       generically wherever content renders. */
+    .article-body table,
+    .content-wrap table {
+        width: 100%;
+        margin-bottom: 1.5rem;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+    }
+
+    .article-body th,
+    .article-body td,
+    .content-wrap th,
+    .content-wrap td {
+        padding: 0.6rem 0.9rem;
+        border: 1px solid var(--color-border);
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .article-body thead th,
+    .content-wrap thead th {
+        background: var(--color-tertiary-bg);
+        font-weight: 600;
+    }
+
+    .article-body tbody tr:nth-child(even),
+    .content-wrap tbody tr:nth-child(even) {
+        background: var(--color-tertiary-bg);
+    }
+
+    /* ---------- Navbar ---------- */
+    .site-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-body-bg);
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .site-navbar .nav-link {
+        color: var(--color-body);
+        font-weight: 500;
+    }
+
+    .site-navbar .nav-link:hover {
+        color: var(--color-emphasis);
+    }
+
+    /* ---------- Theme toggle ---------- */
+    .theme-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 1px solid var(--color-border);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--color-secondary);
+        flex-shrink: 0;
+    }
+
+    .theme-toggle-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .theme-icon-moon {
+        display: none;
+    }
+
+    .dark .theme-icon-sun {
+        display: none;
+    }
+
+    .dark .theme-icon-moon {
+        display: inline-block;
+    }
+
+    /* ---------- Index links ---------- */
+    .index-link, .article-title-link {
+        color: var(--color-emphasis);
+        text-decoration: none;
+    }
+
+    .index-link:hover, .article-title-link:hover {
+        color: var(--accent);
+    }
+
+    /* ---------- Author card ---------- */
+    .author-card {
+        margin-bottom: 0.5rem;
+    }
+
+    .author-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-name {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .author-name:hover {
+        text-decoration: underline;
+    }
+
+    .author-count-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 999px;
+        background: var(--color-emphasis);
+        color: var(--color-body-bg);
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .author-social-links {
+        display: flex;
+        gap: 0.4rem;
+    }
+
+    .author-social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 1px solid var(--color-border);
+        color: var(--color-secondary);
+        text-decoration: none;
+    }
+
+    .author-social-icon:hover {
+        color: var(--color-emphasis);
+        border-color: var(--color-emphasis);
+    }
+
+    /* ---------- Authors list page ---------- */
+    .authors-list .author-card {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .authors-list .author-avatar {
+        width: 64px;
+        height: 64px;
+    }
+
+    .authors-list .author-name {
+        font-size: 1.1rem;
+    }
+
+    /* ---------- Search ---------- */
+    .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 0.65rem;
+        color: var(--color-secondary);
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 220px;
+        padding: 0.45rem 2.1rem 0.45rem 2.1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        background: var(--color-tertiary-bg);
+        color: var(--color-body);
+        transition: border-color 0.15s ease, background 0.15s ease, width 0.15s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: var(--color-body-bg);
+        width: 260px;
+    }
+
+    .search-clear {
+        position: absolute;
+        right: 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--color-secondary);
+        border-radius: 50%;
+    }
+
+    .search-clear:hover {
+        color: var(--color-emphasis);
+        background: var(--color-border);
+    }
+
+    .search-results {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 380px;
+        max-width: 90vw;
+        background: var(--color-body-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 14px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+        z-index: 1000;
+        padding: 0.5rem;
+    }
+
+    .search-result-list {
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
+    .search-result-item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.55rem 0.6rem;
+        border-radius: 9px;
+        text-decoration: none;
+        margin-bottom: 0.15rem;
+    }
+
+    .search-result-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .search-result-icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background: var(--color-tertiary-bg);
+        color: var(--color-secondary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .search-result-text {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-result-title {
+        font-weight: 500;
+        color: var(--color-emphasis);
+        font-size: 0.88rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .search-result-title strong {
+        font-weight: 700;
+    }
+
+    .search-result-summary {
+        color: var(--color-secondary);
+        font-size: 0.78rem;
+        margin-top: 0.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .search-result-enter {
+        flex: 0 0 auto;
+        color: var(--color-secondary);
+        opacity: 0;
+    }
+
+    .search-result-item.is-selected {
+        background: var(--accent);
+    }
+
+    .search-result-item.is-selected .search-result-icon {
+        background: #fff;
+        color: var(--accent);
+    }
+
+    .search-result-item.is-selected .search-result-title,
+    .search-result-item.is-selected .search-result-summary {
+        color: #fff;
+    }
+
+    .search-result-item.is-selected .search-result-enter {
+        color: #fff;
+        opacity: 1;
+    }
+
+    .search-see-all {
+        display: block;
+        text-align: center;
+        margin-top: 0.4rem;
+        padding: 0.55rem 0.6rem 0.35rem;
+        border-top: 1px solid var(--color-border);
+        color: var(--color-secondary);
+        font-size: 0.82rem;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .search-see-all:hover {
+        color: var(--accent);
+    }
+
+    .search-no-results {
+        padding: 0.75rem 0.9rem;
+        color: var(--color-secondary);
+        font-size: 0.85rem;
+    }
+
+    /* ---------- Tag pills ---------- */
+    .tag-pill {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        margin: 0 0.4rem 0.4rem 0;
+        border-radius: 999px;
+        background: transparent;
+        border: 1px solid var(--color-border);
+        color: var(--color-secondary);
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    .tag-pill:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    /* ---------- CTA box ---------- */
+    .cta-box {
+        background: var(--color-tertiary-bg);
+        border-radius: 12px;
+    }
+
+    .cta-text {
+        max-width: 520px;
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+        background: var(--color-tertiary-bg);
+        border-top: 1px solid var(--color-border);
+    }
+
+    .footer-link {
+        color: var(--color-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .footer-link:hover {
+        color: var(--color-emphasis);
+        text-decoration: underline;
+    }
+
+    /* ---------- Language switch ---------- */
+    .lang-switch .dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        border: 1px solid var(--color-border);
+        background: transparent;
+        color: var(--color-secondary);
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+    }
+
+    .lang-switch .dropdown-toggle:hover,
+    .lang-switch .dropdown-toggle:focus,
+    .lang-switch .dropdown-toggle.is-open {
+        color: var(--accent);
+        background: transparent;
+    }
+
+    .lang-switch .dropdown-menu {
+        min-width: 9rem;
+        padding: 0.35rem;
+        border-radius: 0.75rem;
+    }
+
+    .lang-switch .dropdown-item {
+        border-radius: 0.5rem;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .lang-switch .dropdown-item:hover,
+    .lang-switch .dropdown-item:focus {
+        background: transparent;
+        color: var(--accent);
+    }
+
+    .lang-switch .dropdown-item.active {
+        background: transparent;
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    /* ---------- Contact modal (partials/contact_modal.html) ----------
+       display:flex has to come from a plain rule, not an inline style
+       (Alpine's x-show doesn't reliably restore an author-supplied inline
+       display value on re-show - it falls back to the browser default
+       `block`, breaking the centering). With this as a real stylesheet
+       rule, Alpine's inline display:none (only set while hidden) cleanly
+       overrides it by specificity while hidden, and once that inline
+       override is cleared this rule is what's left. */
+    .contact-modal-backdrop {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Card + inputs mirror the landing page's contact modal (dark, rounded,
+       accent-focused) but through theme tokens, so it adapts to the blog's
+       light/dark toggle instead of the landing's fixed dark shell. */
+    .contact-modal-card {
+        background: var(--color-tertiary-bg);
+        border-radius: 1.5rem;
+        border: 1px solid var(--color-border);
+    }
+
+    /* Pulsing accent button, matching the landing page's .btn-glow (see
+       templates/landing.html) - kept in sync by name, driven by --accent so
+       it tracks the blog's own accent color rather than duplicating it. */
+    .btn-glow {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4);
+        animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .btn-glow:hover,
+    .btn-glow:focus {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
+        color: #fff;
+    }
+
+    .btn-glow:disabled {
+        animation: none;
+        opacity: 0.6;
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
+        }
+
+        50% {
+            box-shadow: 0 0 24px 6px rgba(var(--accent-rgb), 0.25);
+        }
+    }
+}

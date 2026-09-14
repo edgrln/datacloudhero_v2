@@ -91,6 +91,7 @@ UI_STRINGS = {
         'ready_to_start': 'Ready to start?',
         'cookie_settings': 'Cookie settings',
         'cookie_policy': 'Cookie Policy',
+        'contact_eyebrow': 'Contact',
         'contact_modal_title': 'Get in touch',
         'contact_name': 'Name',
         'contact_email': 'Email',
@@ -124,6 +125,7 @@ UI_STRINGS = {
         'ready_to_start': 'Prêt à commencer ?',
         'cookie_settings': 'Préférences cookies',
         'cookie_policy': 'Politique de cookies',
+        'contact_eyebrow': 'Contact',
         'contact_modal_title': 'Nous contacter',
         'contact_name': 'Nom',
         'contact_email': 'E-mail',
@@ -157,6 +159,7 @@ UI_STRINGS = {
         'ready_to_start': 'Bereit loszulegen?',
         'cookie_settings': 'Cookie-Einstellungen',
         'cookie_policy': 'Cookie-Richtlinie',
+        'contact_eyebrow': 'Kontakt',
         'contact_modal_title': 'Kontakt aufnehmen',
         'contact_name': 'Name',
         'contact_email': 'E-Mail',
@@ -190,6 +193,7 @@ UI_STRINGS = {
         'ready_to_start': '¿Listo para empezar?',
         'cookie_settings': 'Preferencias de cookies',
         'cookie_policy': 'Política de cookies',
+        'contact_eyebrow': 'Contacto',
         'contact_modal_title': 'Contáctanos',
         'contact_name': 'Nombre',
         'contact_email': 'Correo electrónico',
@@ -352,6 +356,11 @@ STATIC_PATHS = [
     'extra/index.md', 'extra/index-fr.md', 'extra/index-de.md', 'extra/index-es.md',
     'extra/favicon.ico',
 ]
+# Keep the Tailwind build's uncompiled source (static/css/tailwind-input.css -
+# see CLAUDE.md "Commands") out of output/ - Pelican otherwise copies the
+# theme's whole static/ tree verbatim alongside the compiled style.css it
+# builds into. Extends (not replaces) Pelican's own IGNORE_FILES default.
+IGNORE_FILES = ['**/.*', 'tailwind-input.css']
 EXTRA_PATH_METADATA = {
     'extra/index.md': {'path': 'index.md'},
     'extra/index-fr.md': {'path': 'fr/index.md'},

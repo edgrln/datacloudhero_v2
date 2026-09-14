@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "description": "CSS build tooling for the Pelican blog theme (themes/mytheme) - Tailwind CLI only, no JS runtime/framework. See CLAUDE.md.",
+  "scripts": {
+    "build:css": "tailwindcss -i themes/mytheme/static/css/tailwind-input.css -o themes/mytheme/static/css/style.css --minify",
+    "watch:css": "tailwindcss -i themes/mytheme/static/css/tailwind-input.css -o themes/mytheme/static/css/style.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}

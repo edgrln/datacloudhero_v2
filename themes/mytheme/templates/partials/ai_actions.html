@@ -4,12 +4,12 @@
 {% set article_md_url = SITEURL + '/' + article.url|trim('/') + '.md' %}
 {% set article_url = SITEURL + '/' + article.url %}
 {% set ai_prompt = 'Read and summarize this article: ' + article_md_url %}
-<div class="dropdown ai-actions mb-4">
-    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-            id="aiActionsBtn-{{ article.slug }}" data-bs-toggle="dropdown" aria-expanded="false">
+<div class="dropdown ai-actions mb-6" x-data="{ open: false }" @click.away="open = false" @keydown.escape.window="open = false">
+    <button class="btn btn-outline btn-sm dropdown-toggle" type="button"
+            id="aiActionsBtn-{{ article.slug }}" @click="open = !open" :aria-expanded="open">
         <span class="js-ai-actions-label">{{ t.copy_page }}</span>
     </button>
-    <ul class="dropdown-menu" aria-labelledby="aiActionsBtn-{{ article.slug }}">
+    <ul class="dropdown-menu" aria-labelledby="aiActionsBtn-{{ article.slug }}" x-show="open" x-cloak>
         <li>
             <button class="dropdown-item js-copy-markdown" type="button" data-md-url="{{ article_md_url }}">
                 {{ t.copy_page_md }}

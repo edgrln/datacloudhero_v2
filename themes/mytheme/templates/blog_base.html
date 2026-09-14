@@ -16,15 +16,15 @@
 {% set all_lang_articles = (articles + (translations if translations is defined else []))|unique(attribute='source_path')|list %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-3 mb-5">
+<div class="flex flex-col gap-8 min-[992px]:flex-row">
+    <div class="min-[992px]:w-1/4 mb-12 min-[992px]:mb-0">
         <div class="sidebar-sticky">
             <div class="sidebar-heading">{{ t.all_posts }}</div>
             {% set sidebar_articles = all_lang_articles|selectattr('lang', 'equalto', current_lang)|list %}
             {% set articles_by_year = sidebar_articles|groupby('date.year')|reverse %}
             {% for year, year_articles in articles_by_year %}
             <div class="sidebar-year">{{ year }}</div>
-            <ul class="list-unstyled sidebar-list mb-3">
+            <ul class="list-none p-0 sidebar-list mb-4">
                 {% for post in year_articles|sort(attribute='date', reverse=True) %}
                 <li>
                     <a href="{{ SITEURL }}/{{ post.url }}" class="sidebar-link {% if article is defined and post == article %}active{% endif %}">
@@ -36,7 +36,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="col-lg-9">
+    <div class="min-[992px]:w-3/4">
         <div class="content-wrap">
             {% block blog_content %}{% endblock %}
         </div>
