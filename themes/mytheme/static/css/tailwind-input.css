@@ -784,10 +784,18 @@
     }
 
     /* ---------- Tag pills ---------- */
+    /* No margin here on purpose - every place this is used already wraps
+       pills in a flex container with `gap-*` for the row/column spacing
+       (e.g. `flex flex-wrap items-center gap-1` next to the "Tags:"
+       label). A margin-bottom here used to double up with that gap *and*
+       get counted in the pill's own flex-item box for `align-items:
+       center` purposes - inflating its effective height beyond what's
+       visible and throwing off vertical centering against the plain-text
+       "Tags:" label next to it (the label would end up centered against
+       the pill's invisible margin included height, not its visible one). */
     .tag-pill {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        margin: 0 0.4rem 0.4rem 0;
         border-radius: 999px;
         background: transparent;
         border: 1px solid var(--color-border);
