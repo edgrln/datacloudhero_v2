@@ -6,9 +6,17 @@
    formData, submitting, status, error, submitContact), doesn't declare its
    own. Visibility is driven by Alpine's x-show, not Bootstrap's own JS
    modal component, so the two frameworks' JS never have to interact. #}
+{# .contact-modal-backdrop (style.css) supplies display:flex - not
+   Bootstrap's .d-flex (display:flex!important, which would permanently
+   win over the inline display:none Alpine's x-show toggles here, so the
+   modal could open but never close) and not an inline style either
+   (Alpine doesn't reliably restore an author-supplied inline display
+   value on re-show - see style.css for the full explanation). Position/
+   size/padding utility classes below are also !important, but none of
+   them touch `display`, so they're fine as Bootstrap classes. #}
 <div x-show="showContactForm" x-cloak
      @keydown.escape.window="showContactForm = false"
-     class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
+     class="contact-modal-backdrop position-fixed top-0 start-0 w-100 h-100 p-3"
      style="z-index: 1060; background: rgba(0, 0, 0, .55);">
     <div @click.away="showContactForm = false"
          class="bg-body-tertiary rounded-4 shadow-lg p-4 p-md-5 w-100" style="max-width: 540px;">

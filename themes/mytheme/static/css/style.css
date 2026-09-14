@@ -534,3 +534,20 @@ h1, h2, h3 {
     color: var(--accent);
     font-weight: 600;
 }
+
+/* ---------- Contact modal (partials/contact_modal.html) ----------
+   display:flex has to come from a plain (non-!important) class, not
+   Bootstrap's .d-flex utility (display:flex!important - always wins over
+   the inline display:none Alpine's x-show toggles on this same element,
+   so the modal could open but never close) and not an inline style either
+   (Alpine's x-show doesn't reliably restore an author-supplied inline
+   display value when re-showing an element - it fell back to the browser
+   default `block`, breaking the centering). With this as a real
+   stylesheet rule, Alpine's inline display:none (only set while hidden)
+   cleanly overrides it by specificity while hidden, and once that inline
+   override is cleared this rule is what's left. */
+.contact-modal-backdrop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
