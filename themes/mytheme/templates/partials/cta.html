@@ -7,16 +7,25 @@
 {% set cta_title = cta.title if cta else CTA_TITLE %}
 {% set cta_text = cta.text if cta else CTA_TEXT %}
 {% set cta_button_text = cta.button_text if cta else CTA_BUTTON_TEXT %}
-{% set cta_button_link = CTA_BUTTON_LINK %}
 {% set cta_footnote = cta.footnote if cta else CTA_FOOTNOTE %}
 {% if cta_title %}
-<div class="cta-box my-5 p-4 p-md-5 text-center">
+{# The button opens the same contact form/Turnstile/submit flow as the
+   landing page (theme/js/contact-form.js) instead of a bare mailto: link -
+   see CLAUDE.md's "Contact form" section. #}
+{# x-data uses single quotes: |tojson always produces double-quoted JS
+   string literals, which would otherwise terminate a double-quoted HTML
+   attribute at the first embedded quote and truncate the Alpine
+   expression mid-call. #}
+<div class="cta-box my-5 p-4 p-md-5 text-center"
+     x-data='contactForm({{ t.contact_success|tojson }}, {{ t.contact_error|tojson }})'>
     <p class="text-uppercase small fw-semibold text-muted mb-2">{{ t.ready_to_start }}</p>
     <h2 class="mb-3">{{ cta_title }}</h2>
     {% if cta_text %}<p class="text-muted mb-4 mx-auto cta-text">{{ cta_text }}</p>{% endif %}
-    {% if cta_button_text and cta_button_link %}
-    <a href="{{ cta_button_link }}" class="btn btn-dark btn-lg px-4">{{ cta_button_text }}</a>
+    {% if cta_button_text %}
+    <button type="button" @click="showContactForm = true; formStartedAt = Date.now()" class="btn btn-dark btn-lg px-4">{{ cta_button_text }}</button>
     {% endif %}
     {% if cta_footnote %}<p class="text-muted small mt-3 mb-0">{{ cta_footnote }}</p>{% endif %}
+
+    {% include "partials/contact_modal.html" %}
 </div>
 {% endif %}

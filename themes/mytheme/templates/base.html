@@ -180,7 +180,13 @@
             };
         }
     </script>
+    {# contact-form.js must load (and run) before Alpine's own script, since
+       it defines the global contactForm() function Alpine looks up when it
+       scans the DOM for x-data="contactForm(...)" - see partials/cta.html /
+       partials/contact_modal.html, and CLAUDE.md's "Contact form" section. #}
+    <script defer src="{{ SITEURL }}/theme/js/contact-form.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link href="{{ SITEURL }}/theme/css/style.css" rel="stylesheet">
     <link href="{{ SITEURL }}/theme/css/pygments.css" rel="stylesheet">
     <link rel="icon" href="{{ SITEURL }}/theme/img/favicon.ico">

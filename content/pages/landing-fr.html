@@ -423,6 +423,9 @@
       </div>
     </section>
 
+    <!-- CTA + contact modal share the contactForm() Alpine component
+         (theme/js/contact-form.js) - see CLAUDE.md "Contact form" section. -->
+    <div x-data="contactForm('Message envoyé. Merci !', 'Une erreur est survenue. Merci de nous écrire directement par e-mail.')">
     <!-- CTA -->
     <section id="contact" class="px-6 lg:px-16 py-24">
       <div class="max-w-5xl mx-auto">
@@ -536,6 +539,7 @@
           </div>
         </form>
       </div>
+    </div>
     </div>
 
     <!-- FAQ -->

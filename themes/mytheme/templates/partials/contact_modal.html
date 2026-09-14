@@ -1,0 +1,49 @@
+{# Bootstrap-styled contact modal, sharing the contactForm() Alpine
+   component (theme/js/contact-form.js) with the landing page's Tailwind
+   modal - same fields/Turnstile/submit behavior, native markup per side.
+   Included from cta.html, inside a parent element that already carries
+   x-data="contactForm(...)" - relies on that ancestor scope (showContactForm,
+   formData, submitting, status, error, submitContact), doesn't declare its
+   own. Visibility is driven by Alpine's x-show, not Bootstrap's own JS
+   modal component, so the two frameworks' JS never have to interact. #}
+<div x-show="showContactForm" x-cloak
+     @keydown.escape.window="showContactForm = false"
+     class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
+     style="z-index: 1060; background: rgba(0, 0, 0, .55);">
+    <div @click.away="showContactForm = false"
+         class="bg-body-tertiary rounded-4 shadow-lg p-4 p-md-5 w-100" style="max-width: 540px;">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <h2 class="h4 mb-0">{{ t.contact_modal_title }}</h2>
+            <button type="button" class="btn-close" @click="showContactForm = false" aria-label="Close"></button>
+        </div>
+
+        <form @submit.prevent="submitContact($event)">
+            {# Honeypot: hidden from real users, bots that auto-fill every input tend to fill it. #}
+            <input type="text" name="company" x-model="formData.company" tabindex="-1" autocomplete="off"
+                   aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">{{ t.contact_name }}</label>
+                <input type="text" name="name" x-model="formData.name" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">{{ t.contact_email }}</label>
+                <input type="email" name="email" x-model="formData.email" required class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">{{ t.contact_message }}</label>
+                <textarea name="message" x-model="formData.message" required rows="5" class="form-control"></textarea>
+            </div>
+
+            <div class="cf-turnstile mb-3" data-sitekey="0x4AAAAAAEM7muzBPUFiEYFd" data-theme="auto"></div>
+
+            <button type="submit" :disabled="submitting" class="btn btn-dark btn-lg w-100">
+                <span x-show="!submitting">{{ t.contact_send }}</span>
+                <span x-show="submitting" x-cloak>{{ t.contact_sending }}</span>
+            </button>
+
+            <p x-show="status" x-cloak x-text="status" class="small mt-3 mb-0" style="color: var(--accent);"></p>
+            <p x-show="error" x-cloak x-text="error" class="small mt-3 mb-0 text-danger"></p>
+        </form>
+    </div>
+</div>
