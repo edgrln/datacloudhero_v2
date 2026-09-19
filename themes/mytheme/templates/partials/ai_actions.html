@@ -3,7 +3,7 @@
    prompt pre-filled. Expects `article` in context. #}
 {% set article_md_url = SITEURL + '/' + article.url|trim('/') + '.md' %}
 {% set article_url = SITEURL + '/' + article.url %}
-{% set ai_prompt = 'Read and summarize this article: ' + article_md_url %}
+{% set ai_prompt = 'Read and summarize this article: ' + article_url %}
 <div class="dropdown ai-actions mb-6" x-data="{ open: false }" @click.away="open = false" @keydown.escape.window="open = false">
     <button class="btn btn-outline btn-sm dropdown-toggle" type="button"
             id="aiActionsBtn-{{ article.slug }}" @click="open = !open" :aria-expanded="open">
