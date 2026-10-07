@@ -36,6 +36,8 @@
   <meta name="twitter:description" content="Data & AI Engineering Services — reliable data and AI platforms on Google Cloud.">
 
   <title>datacloudhero.com - Data & AI Engineering</title>
+  {# Same rule as base.html: index.html / fr/index.html / ... -> https://datacloudhero.com/, /fr/, ... #}
+  <link rel="canonical" href="{{ SITEURL }}/{{ output_file[:-10] if output_file.endswith('index.html') else output_file }}">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
 

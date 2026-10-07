@@ -628,6 +628,7 @@ def _write_lang_blog_indexes(article_generator):
         local_context = dict(article_generator.context)
         local_context['articles'] = lang_articles
         local_context['current_lang'] = lang
+        local_context['output_file'] = f'{lang}/blog/index.html'  # for base.html's canonical link
         html = template.render(local_context)
 
         out_path = _os.path.join(article_generator.output_path, lang, 'blog', 'index.html')
