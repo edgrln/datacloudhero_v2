@@ -301,6 +301,8 @@ SITEMAP = {
     'exclude': [
         # A JSON data file for the client-side search widget, not a page.
         r'blog/search-index\.json$',
+        # GitHub Pages' custom error page (a DIRECT_TEMPLATES entry), not a page.
+        r'^404\.html$',
     ],
     'priorities': {
         'articles': 0.6,
@@ -356,8 +358,10 @@ AUTHORS_URL = 'blog/authors.html'
 ARCHIVES_SAVE_AS = 'blog/archives.html'
 ARCHIVES_URL = 'blog/archives.html'
 
-# Client-side search index (see themes/mytheme/templates/search.html)
-DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "search"]
+# Client-side search index (see themes/mytheme/templates/search.html).
+# "404" renders output/404.html at the site root, which GitHub Pages serves
+# (with a real 404 status) for any path that has no file.
+DIRECT_TEMPLATES = ["index", "tags", "categories", "authors", "archives", "search", "404"]
 SEARCH_SAVE_AS = "blog/search-index.json"
 SEARCH_URL = "blog/search-index.json"
 
