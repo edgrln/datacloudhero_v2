@@ -390,6 +390,7 @@ SEARCH_URL = "blog/search-index.json"
 STATIC_PATHS = [
     'extra/index.md', 'extra/index-fr.md', 'extra/index-de.md', 'extra/index-es.md',
     'extra/favicon.ico',
+    'extra/yandex_878add22d96faaa4.html',
 ]
 # Keep the Tailwind build's uncompiled source (static/css/tailwind-input.css -
 # see CLAUDE.md "Commands") out of output/ - Pelican otherwise copies the
@@ -402,6 +403,8 @@ EXTRA_PATH_METADATA = {
     'extra/index-de.md': {'path': 'de/index.md'},
     'extra/index-es.md': {'path': 'es/index.md'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
+    # Yandex Webmaster ownership check - must stay at the root, byte-for-byte.
+    'extra/yandex_878add22d96faaa4.html': {'path': 'yandex_878add22d96faaa4.html'},
 }
 # Keep the article/page generators from also trying to parse content/extra
 # (the static passthrough files above) as blog content. ARTICLE_PATHS
